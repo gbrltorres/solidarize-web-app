@@ -74,23 +74,23 @@ export default {
 }
 
 .button-color {
-  background-color: rgb(175, 127, 219);
-  border-color: rgb(175, 127, 219);
+  background-color: #8c52ff;
+  border-color: #8c52ff;
 }
 
 .button-color:hover {
-  background-color: hsl(271, 55%, 76%);
-  border-color: hsl(271, 55%, 76%);
+  background-color: #c3a0e3;
+  border-color: #c3a0e3;
 }
 
 a {
-  color: blueviolet;
+  color: #8c52ff;
   padding-left: 0 !important;
 }
 
 a:hover,
 a:active {
-  color: hsl(271, 55%, 76%);
+  color: #c3a0e3;
 }
 
 .user-type-label {

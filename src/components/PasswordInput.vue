@@ -62,7 +62,7 @@ export default {
 <style scoped>
 .btn {
   border-color: #ced4da;
-  color: #000; /* Cor do ícone */
+  color: #8c52ff;
 }
 
 .btn:hover {
