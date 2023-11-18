@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex pt-5 justify-content-center align-items-center">
+  <div class="container d-flex pt-5 justify-content-center">
     <div class="card p-4 mb-5">
       <div class="card-body text-start">
         <div class="row">
@@ -17,9 +17,7 @@
         </div>
         <div class="row">
           <div class="col-12 col-sm-6">
-            <button
-              class="mt-4 btn btn-primary button-color custom-button w-100"
-            >
+            <button class="mt-4 btn btn-primary button-color custom-button">
               Voltar
             </button>
           </div>

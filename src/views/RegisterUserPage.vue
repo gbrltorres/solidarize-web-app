@@ -1,49 +1,57 @@
 <template>
-  <div class="container d-flex justify-content-center align-items-center pt-5">
+  <div class="container d-flex justify-content-center pt-5">
     <div class="card p-4 mb-5">
-      <div class="card-body">
-        <h2 class="card-title text-start mb-5">Cadastro de usuário</h2>
-        <form>
-          <div class="mb-3">
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Nome Completo"
-              v-model="fullName"
-            />
+      <div class="card-body text-start">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="card-title mb-5">Cadastro de usuário</h2>
           </div>
-          <div class="mb-3">
-            <PasswordInput
-              v-model="password"
-              placeholder="Senha"
-              :showToggle="true"
-            />
-            <PasswordInput
-              v-model="confirmPassword"
-              placeholder="Confirme sua senha"
-              :showToggle="true"
-            />
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <form>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Nome Completo"
+                  v-model="fullName"
+                />
+              </div>
+              <div class="mb-3">
+                <PasswordInput
+                  v-model="password"
+                  placeholder="Senha"
+                  :showToggle="true"
+                />
+                <PasswordInput
+                  v-model="confirmPassword"
+                  placeholder="Confirme sua senha"
+                  :showToggle="true"
+                />
+              </div>
+              <div class="d-grid gap-2">
+                <label class="text-start user-type-label">
+                  <input type="radio" name="role" value="gestor" checked />
+                  Quero apenas fazer doações
+                </label>
+                <label class="text-start user-type-label">
+                  <input type="radio" name="role" value="nao-gestor" />
+                  Quero cadastrar uma ONG
+                </label>
+                <button type="submit" class="mt-4 btn btn-primary button-color">
+                  Cadastrar
+                </button>
+                <div class="text-start">
+                  <a href="./assets/html/login-user.html" class="btn btn-link"
+                    >Voltar para o início</a
+                  >
+                </div>
+              </div>
+            </form>
           </div>
-          <div class="d-grid gap-2">
-            <label class="text-start user-type-label">
-              <input type="radio" name="role" value="gestor" />
-              Quero apenas fazer doações
-            </label>
-            <label class="text-start user-type-label">
-              <input type="radio" name="role" value="nao-gestor" checked />
-              Quero cadastrar uma ONG
-            </label>
-            <button type="submit" class="mt-4 btn btn-primary button-color">
-              Cadastrar
-            </button>
-            <div class="text-start">
-              <a href="./assets/html/login-user.html" class="btn btn-link"
-                >Voltar para o início</a
-              >
-            </div>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
