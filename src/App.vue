@@ -9,6 +9,12 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(175, 127, 219),
+    hsl(36, 51%, 77%)
+  );
+  min-height: 100vh;
 }
 
 nav {
@@ -24,12 +30,8 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
-#app {
-  background-image: linear-gradient(
-    to bottom,
-    rgb(175, 127, 219),
-    hsl(36, 51%, 77%)
-  );
-  min-height: 100vh;
+.separator-line {
+  height: 1px;
+  background-color: #cccccc;
 }
 </style>

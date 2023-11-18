@@ -1,8 +1,8 @@
 <template>
   <div class="container d-flex justify-content-center align-items-center pt-5">
-    <div class="card p-4">
+    <div class="card p-4 mb-5">
       <div class="card-body">
-        <h2 class="card-title text-center mb-5">Cadastro de usuário</h2>
+        <h2 class="card-title text-start mb-5">Cadastro de usuário</h2>
         <form>
           <div class="mb-3">
             <input
@@ -11,15 +11,6 @@
               id="name"
               placeholder="Nome Completo"
               v-model="fullName"
-            />
-          </div>
-          <div class="mb-3">
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              placeholder="E-mail"
-              v-model="email"
             />
           </div>
           <div class="mb-3">
@@ -35,12 +26,22 @@
             />
           </div>
           <div class="d-grid gap-2">
+            <label class="text-start user-type-label">
+              <input type="radio" name="role" value="gestor" />
+              Quero apenas fazer doações
+            </label>
+            <label class="text-start user-type-label">
+              <input type="radio" name="role" value="nao-gestor" checked />
+              Quero cadastrar uma ONG
+            </label>
             <button type="submit" class="mt-4 btn btn-primary button-color">
               Cadastrar
             </button>
-            <a href="./assets/html/login-user.html" class="btn btn-link"
-              >Já possui uma conta? Entre aqui</a
-            >
+            <div class="text-start">
+              <a href="./assets/html/login-user.html" class="btn btn-link"
+                >Voltar para o início</a
+              >
+            </div>
           </div>
         </form>
       </div>
@@ -80,5 +81,20 @@ export default {
 .button-color:hover {
   background-color: hsl(271, 55%, 76%);
   border-color: hsl(271, 55%, 76%);
+}
+
+a {
+  color: blueviolet;
+  padding-left: 0 !important;
+}
+
+a:hover,
+a:active {
+  color: hsl(271, 55%, 76%);
+}
+
+.user-type-label {
+  font-size: 14px;
+  color: rgb(85, 85, 85);
 }
 </style>

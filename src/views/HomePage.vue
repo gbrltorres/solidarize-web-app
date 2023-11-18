@@ -2,7 +2,7 @@
   <div class="container d-flex justify-content-center align-items-center pt-5">
     <div class="card p-4 mb-5">
       <div class="card-body">
-        <h2 class="card-title text-start mb-5">Entre no Solidarize</h2>
+        <h2 class="card-title text-start mb-5">Faça seu cadastro</h2>
         <form>
           <div class="mb-3">
             <input
@@ -13,29 +13,17 @@
               v-model="email"
             />
           </div>
-          <div class="mb-3">
-            <PasswordInput
-              v-model="password"
-              placeholder="Digite sua senha"
-              :showToggle="true"
-            />
-          </div>
           <div class="d-grid gap-2">
-            <button type="submit" class="mt-4 btn btn-primary button-color">
-              Entrar
+            <button type="submit" class="mt-3 btn btn-primary button-color">
+              Avançar
             </button>
-            <a
-              href="./assets/html/login-user.html"
-              class="btn btn-link text-start forgot-password-button"
-              >Esqueceu sua senha?</a
-            >
-          </div>
-          <div class="separator-line mt-4"></div>
-          <div class="mt-4">
-            Não possui uma conta?
-            <a href="./assets/html/login-user.html" class="btn btn-link"
-              >Cadastre aqui</a
-            >
+            <div class="text-start">
+              Já possui uma conta?
+              <a href="./assets/html/login-user.html" class="btn btn-link"
+                >Entre aqui</a
+              >
+            </div>
+            <img class="mt-3" :src="logoUrl" alt="Solidarize logo" />
           </div>
         </form>
       </div>
@@ -44,16 +32,13 @@
 </template>
 
 <script>
-import PasswordInput from "@/components/PasswordInput.vue";
+import logo from "../assets/logo.png";
 
 export default {
-  components: {
-    PasswordInput,
-  },
   data() {
     return {
       email: "",
-      password: "",
+      logoUrl: logo,
     };
   },
 };
@@ -73,10 +58,6 @@ export default {
 .button-color:hover {
   background-color: hsl(271, 55%, 76%);
   border-color: hsl(271, 55%, 76%);
-}
-
-.forgot-password-button {
-  padding-left: 0;
 }
 
 a {
