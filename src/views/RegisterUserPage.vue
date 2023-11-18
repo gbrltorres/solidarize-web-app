@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex justify-content-center align-items-center mt-5">
+  <div class="container d-flex justify-content-center align-items-center pt-5">
     <div class="card p-4">
       <div class="card-body">
         <h2 class="card-title text-center mb-5">Cadastro de usuário</h2>
@@ -35,7 +35,7 @@
             />
           </div>
           <div class="d-grid gap-2">
-            <button type="submit" class="mt-4 btn btn-primary">
+            <button type="submit" class="mt-4 btn btn-primary button-color">
               Cadastrar
             </button>
             <a href="./assets/html/login-user.html" class="btn btn-link"
@@ -68,7 +68,17 @@ export default {
 
 <style scoped>
 .card {
-  max-width: 500px;
+  max-width: 400px;
   width: 100%;
+}
+
+.button-color {
+  background-color: rgb(175, 127, 219);
+  border-color: rgb(175, 127, 219);
+}
+
+.button-color:hover {
+  background-color: hsl(271, 55%, 76%);
+  border-color: hsl(271, 55%, 76%);
 }
 </style>
