@@ -9,15 +9,18 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <form>
+            <Form ref="form" @submit.prevent="submitForm">
               <div class="mb-3">
-                <input
+                <Field
+                  name="e-mail"
                   type="text"
                   class="form-control"
                   id="email"
                   placeholder="Digite seu e-mail"
                   v-model="email"
+                  rules="required|email"
                 />
+                <ErrorMessage name="e-mail" class="text-danger" />
               </div>
               <div class="d-grid gap-2 mb-3">
                 <button type="submit" class="btn btn-primary button-color">
@@ -33,7 +36,7 @@
               <div class="mt-3">
                 <img :src="logoUrl" alt="Logo Solidarize" />
               </div>
-            </form>
+            </Form>
           </div>
         </div>
       </div>
@@ -42,14 +45,60 @@
 </template>
 
 <script>
+import { Field, Form, ErrorMessage, defineRule, configure } from "vee-validate";
+import { required, email } from "@vee-validate/rules";
+import { mapGetters, mapActions } from "vuex";
 import logo from "../assets/logo.png";
 
 export default {
+  components: {
+    Field,
+    Form,
+    ErrorMessage,
+  },
+
   data() {
     return {
       email: "",
       logoUrl: logo,
     };
+  },
+
+  computed: {
+    ...mapGetters(["getEmail"]),
+  },
+
+  created() {
+    defineRule("required", required);
+    defineRule("email", email);
+
+    configure({
+      generateMessage: (context) => {
+        const messages = {
+          required: `O campo ${context.field} é obrigatório.`,
+          email: `Por favor, insira um endereço de e-mail válido.`,
+        };
+
+        return (
+          messages[context.rule.name] || `O campo ${context.field} é inválido.`
+        );
+      },
+    });
+  },
+
+  methods: {
+    ...mapActions(["setEmail"]),
+
+    async submitForm() {
+      const isValid = await this.$refs.form.validate();
+      if (!isValid) {
+        return;
+      }
+
+      this.setEmail(this.email);
+      const foo = this.getEmail;
+      console.log("foo", foo);
+    },
   },
 };
 </script>
@@ -84,5 +133,9 @@ a:active {
 img {
   max-width: 100%;
   height: auto;
+}
+
+.form-control {
+  margin-bottom: 10px;
 }
 </style>
