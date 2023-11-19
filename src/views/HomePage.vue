@@ -21,6 +21,7 @@
                   class="form-control"
                   placeholder="Digite o seu e-mail"
                   :class="{ 'is-invalid': errors.email }"
+                  v-model="email"
                 />
                 <div class="invalid-feedback">{{ errors.email }}</div>
               </div>
@@ -31,7 +32,7 @@
               </div>
               <div class="text-start mb-3">
                 Já possui uma conta?
-                <a href="#" @click="linkClick" class="btn btn-link"
+                <a href="#" @click.prevent="linkClick" class="btn btn-link"
                   >Entre aqui</a
                 >
               </div>
@@ -67,6 +68,7 @@ export default {
 
     return {
       schema,
+      email: "",
       logoUrl: logo,
     };
   },
@@ -76,10 +78,11 @@ export default {
 
     submitForm() {
       this.setEmail(this.email);
+      this.$router.push("/cadastro");
     },
 
     linkClick() {
-      this.$router.push("/cadastro");
+      this.$router.push("/login");
     },
   },
 };
@@ -119,9 +122,5 @@ img {
 
 .form-control {
   margin-bottom: 10px;
-}
-
-.invalid {
-  background-color: red !important;
 }
 </style>

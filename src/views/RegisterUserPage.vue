@@ -9,35 +9,62 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <form>
+            <Form
+              @submit="submitForm"
+              :validation-schema="schema"
+              v-slot="{ errors }"
+            >
               <div class="mb-3">
-                <input
+                <Field
+                  name="fullName"
                   type="text"
                   class="form-control"
-                  id="name"
-                  placeholder="Nome Completo"
+                  placeholder="Digite seu nome completo"
+                  :class="{ 'is-invalid': errors.fullName }"
                   v-model="fullName"
                 />
+                <div class="invalid-feedback">{{ errors.fullName }}</div>
               </div>
               <div class="mb-3">
-                <PasswordInput
+                <Field
+                  name="password"
+                  type="password"
+                  class="form-control"
                   v-model="password"
-                  placeholder="Senha"
-                  :showToggle="true"
+                  placeholder="Digite sua senha"
+                  :class="{ 'is-invalid': errors.password }"
                 />
-                <PasswordInput
+                <div class="invalid-feedback">{{ errors.password }}</div>
+              </div>
+              <div class="mb-3">
+                <Field
+                  name="confirmPassword"
+                  type="password"
+                  class="form-control"
                   v-model="confirmPassword"
-                  placeholder="Confirme sua senha"
-                  :showToggle="true"
+                  placeholder="Digite sua senha novamente"
+                  :class="{ 'is-invalid': errors.confirmPassword }"
                 />
+                <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
               </div>
               <div class="d-grid gap-2">
                 <label class="text-start user-type-label">
-                  <input type="radio" name="role" value="gestor" checked />
+                  <input
+                    type="radio"
+                    name="role"
+                    value="gestor"
+                    v-model="role"
+                    checked
+                  />
                   Quero apenas fazer doações
                 </label>
                 <label class="text-start user-type-label">
-                  <input type="radio" name="role" value="nao-gestor" />
+                  <input
+                    type="radio"
+                    name="role"
+                    value="nao-gestor"
+                    v-model="role"
+                  />
                   Quero cadastrar uma ONG
                 </label>
                 <button type="submit" class="mt-4 btn btn-primary button-color">
@@ -49,7 +76,7 @@
                   >
                 </div>
               </div>
-            </form>
+            </Form>
           </div>
         </div>
       </div>
@@ -58,19 +85,38 @@
 </template>
 
 <script>
-import PasswordInput from "@/components/PasswordInput.vue";
+import { Field, Form } from "vee-validate";
+import * as Yup from "yup";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
-    PasswordInput,
+    Field,
+    Form,
   },
+
   data() {
+    const schema = Yup.object().shape({
+      fullName: Yup.string().required("O campo nome é obrigatório."),
+      password: Yup.string().required("O campo senha é obrigatório."),
+      confirmPassword: Yup.string().required("O campo senha é obrigatório."),
+    });
+
     return {
+      schema,
       fullName: "",
-      email: "",
+      role: "",
       password: "",
       confirmPassword: "",
     };
+  },
+
+  computed: {
+    ...mapGetters(["getEmail"]),
+  },
+
+  methods: {
+    submitForm() {},
   },
 };
 </script>
