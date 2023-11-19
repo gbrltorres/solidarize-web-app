@@ -9,18 +9,20 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <Form ref="form" @submit.prevent="submitForm">
+            <Form
+              @submit="submitForm"
+              :validation-schema="schema"
+              v-slot="{ errors }"
+            >
               <div class="mb-3">
                 <Field
-                  name="e-mail"
+                  name="email"
                   type="text"
                   class="form-control"
-                  id="email"
-                  placeholder="Digite seu e-mail"
-                  v-model="email"
-                  rules="required|email"
+                  placeholder="Digite o seu e-mail"
+                  :class="{ 'is-invalid': errors.email }"
                 />
-                <ErrorMessage name="e-mail" class="text-danger" />
+                <div class="invalid-feedback">{{ errors.email }}</div>
               </div>
               <div class="d-grid gap-2 mb-3">
                 <button type="submit" class="btn btn-primary button-color">
@@ -29,7 +31,7 @@
               </div>
               <div class="text-start mb-3">
                 Já possui uma conta?
-                <a href="./assets/html/login-user.html" class="btn btn-link"
+                <a href="#" @click="linkClick" class="btn btn-link"
                   >Entre aqui</a
                 >
               </div>
@@ -45,59 +47,39 @@
 </template>
 
 <script>
-import { Field, Form, ErrorMessage, defineRule, configure } from "vee-validate";
-import { required, email } from "@vee-validate/rules";
-import { mapGetters, mapActions } from "vuex";
+import { Field, Form } from "vee-validate";
+import { mapActions } from "vuex";
+import * as Yup from "yup";
 import logo from "../assets/logo.png";
 
 export default {
   components: {
     Field,
     Form,
-    ErrorMessage,
   },
 
   data() {
+    const schema = Yup.object().shape({
+      email: Yup.string()
+        .required("O campo e-mail é obrigatório.")
+        .email("Por favor, insira um endereço de e-mail válido."),
+    });
+
     return {
-      email: "",
+      schema,
       logoUrl: logo,
     };
-  },
-
-  computed: {
-    ...mapGetters(["getEmail"]),
-  },
-
-  created() {
-    defineRule("required", required);
-    defineRule("email", email);
-
-    configure({
-      generateMessage: (context) => {
-        const messages = {
-          required: `O campo ${context.field} é obrigatório.`,
-          email: `Por favor, insira um endereço de e-mail válido.`,
-        };
-
-        return (
-          messages[context.rule.name] || `O campo ${context.field} é inválido.`
-        );
-      },
-    });
   },
 
   methods: {
     ...mapActions(["setEmail"]),
 
-    async submitForm() {
-      const isValid = await this.$refs.form.validate();
-      if (!isValid) {
-        return;
-      }
-
+    submitForm() {
       this.setEmail(this.email);
-      const foo = this.getEmail;
-      console.log("foo", foo);
+    },
+
+    linkClick() {
+      this.$router.push("/cadastro");
     },
   },
 };
@@ -137,5 +119,9 @@ img {
 
 .form-control {
   margin-bottom: 10px;
+}
+
+.invalid {
+  background-color: red !important;
 }
 </style>
