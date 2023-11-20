@@ -27,8 +27,13 @@
                 <div class="invalid-feedback">{{ errors.email }}</div>
               </div>
               <div class="d-grid gap-2 mb-3">
-                <button type="submit" class="btn btn-primary button-color">
-                  Avançar
+                <button
+                  type="submit"
+                  class="mt-4 btn btn-primary button-color"
+                  :disabled="loading"
+                >
+                  <div v-if="loading" class="spinner"></div>
+                  <span v-else>Cadastrar</span>
                 </button>
               </div>
               <div class="text-start mb-3">
@@ -72,6 +77,7 @@ export default {
       schema,
       email: "",
       logoUrl: logo,
+      loading: false,
     };
   },
 
@@ -79,6 +85,7 @@ export default {
     ...mapActions(["setEmail"]),
 
     async submitForm() {
+      this.loading = true;
       try {
         const userExists = await userController.checkUser({
           email: this.email,
@@ -92,7 +99,14 @@ export default {
           this.$router.push("/cadastro");
         }
       } catch (ex) {
-        console.log("erro", ex);
+        this.$swal({
+          title: "Ocorreu algum erro",
+          text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      } finally {
+        this.loading = false;
       }
     },
 
