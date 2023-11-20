@@ -16,6 +16,14 @@ const routes = [
       ),
   },
   {
+    path: "/cadastro-gestor",
+    name: "Cadastro Gestor",
+    component: () =>
+      import(
+        /* webpackChunkName: "register-manager" */ "../views/RegisterManagerPage.vue"
+      ),
+  },
+  {
     path: "/login",
     name: "Login",
     component: () =>

@@ -100,7 +100,7 @@ export default {
         }
       } catch (ex) {
         this.$swal({
-          title: "Ocorreu algum erro",
+          title: "Ocorreu algum erro!",
           text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
           icon: "error",
           confirmButtonText: "Ok",

@@ -71,6 +71,7 @@ export default {
 .card {
   max-width: 400px;
   width: 100%;
+  border: none;
 }
 
 .button-color {

@@ -4,7 +4,7 @@
       <div class="card-body text-start">
         <div class="row">
           <div class="col-12">
-            <h2 class="card-title mb-5">Cadastro de usuário</h2>
+            <h4 class="card-title mb-5">Cadastro de usuário gestor</h4>
           </div>
         </div>
         <div class="row">
@@ -16,57 +16,54 @@
             >
               <div class="mb-3">
                 <Field
-                  name="fullName"
+                  name="ngoName"
                   type="text"
                   class="form-control"
-                  placeholder="Digite seu nome completo"
-                  :class="{ 'is-invalid': errors.fullName }"
-                  v-model="fullName"
+                  placeholder="Digite o nome da ONG"
+                  :class="{ 'is-invalid': errors.ngoName }"
+                  v-model="ngoName"
                 />
-                <div class="invalid-feedback">{{ errors.fullName }}</div>
+                <div class="invalid-feedback">{{ errors.ngoName }}</div>
               </div>
               <div class="mb-3">
                 <Field
-                  name="password"
-                  type="password"
+                  name="cnpj"
+                  type="cnpj"
                   class="form-control"
-                  v-model="password"
-                  placeholder="Digite sua senha"
-                  :class="{ 'is-invalid': errors.password }"
+                  v-model="cnpj"
+                  placeholder="Digite o CNPJ"
+                  :class="{ 'is-invalid': errors.cnpj }"
                 />
-                <div class="invalid-feedback">{{ errors.password }}</div>
+                <div class="invalid-feedback">{{ errors.cnpj }}</div>
               </div>
               <div class="mb-3">
                 <Field
-                  name="confirmPassword"
-                  type="password"
+                  as="textarea"
+                  name="description"
                   class="form-control"
-                  v-model="confirmPassword"
-                  placeholder="Digite sua senha novamente"
-                  :class="{ 'is-invalid': errors.confirmPassword }"
+                  placeholder="Fale um pouco de sua ONG aqui"
+                  v-model="description"
+                  rows="4"
                 />
-                <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
+                <ErrorMessage name="description" class="text-danger" />
               </div>
               <div class="d-grid gap-2">
-                <label class="text-start user-type-label">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="nao-gestor"
-                    v-model="role"
-                    checked
+                <label>Interesses:</label>
+                <div
+                  v-for="option in interestsOptions"
+                  :key="option"
+                  class="mb-1"
+                >
+                  <Field
+                    class="checkbox-margin"
+                    type="checkbox"
+                    name="interests"
+                    :value="option"
+                    v-model="interests"
                   />
-                  Quero apenas fazer doações
-                </label>
-                <label class="text-start user-type-label">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="gestor"
-                    v-model="role"
-                  />
-                  Quero cadastrar uma ONG
-                </label>
+                  <label :for="`interest-${option}`">{{ option }}</label>
+                </div>
+                <ErrorMessage name="interests" class="text-danger" />
                 <button
                   type="submit"
                   class="mt-4 btn btn-primary button-color"
@@ -90,7 +87,7 @@
 </template>
 
 <script>
-import { Field, Form } from "vee-validate";
+import { Field, Form, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
 import { mapGetters } from "vuex";
 import userController from "../controllers/userController.js";
@@ -99,24 +96,45 @@ export default {
   components: {
     Field,
     Form,
+    ErrorMessage,
   },
 
   data() {
     const schema = Yup.object().shape({
-      fullName: Yup.string().required("O campo nome é obrigatório."),
-      password: Yup.string().required("O campo senha é obrigatório."),
-      confirmPassword: Yup.string()
-        .required("O campo senha é obrigatório.")
-        .oneOf([Yup.ref("password"), null], "As senhas devem ser iguais."),
+      ngoName: Yup.string().required("O campo nome da ONG é obrigatório."),
+      cnpj: Yup.string().required("O campo CNPJ é obrigatório."),
+      phoneNumber: Yup.string().required("O campo telefone é obrigatório."),
+      description: Yup.string().required(
+        "O campo de descrição da ONG é obrigatório."
+      ),
+      interests: Yup.array()
+        .min(1, "Selecione pelo menos um interesse.")
+        .of(Yup.string())
+        .required("Selecione pelo menos um interesse."),
     });
 
     return {
       schema,
-      fullName: "",
-      role: "",
-      password: "",
-      confirmPassword: "",
+      ngoName: "",
+      cnpj: "",
+      phoneNumber: "",
+      description: "",
       loading: false,
+      interests: [],
+      interestsOptions: [
+        "Alimentos",
+        "Roupas",
+        "Materiais de Higiene",
+        "Materiais Hospitalares",
+        "Eletrônicos",
+        "Eletrodomésticos",
+        "Materiais Escolares",
+        "Livros",
+        "Móveis",
+        "Materiais Esportivos",
+        "Outros",
+      ],
+      interestsError: null,
     };
   },
 
@@ -125,11 +143,23 @@ export default {
   },
 
   methods: {
+    checkInterests() {
+      console.log("Verificando interesses");
+      this.interestsError =
+        this.interests.length > 0 ? null : "Selecione pelo menos um interesse.";
+    },
+
     async submitForm() {
       this.loading = true;
+
+      this.checkInterests();
+      if (this.interestsError) {
+        this.loading = false;
+        return;
+      }
+
       try {
         const isManager = this.role === "gestor" ? true : false;
-        console.log("é gestor", isManager);
         const reqBody = {
           name: this.fullName,
           email: this.getEmail,
@@ -141,7 +171,7 @@ export default {
         if (!isManager) {
           this.$router.push("/sucesso");
         } else {
-          this.$router.push("/cadastro-gestor");
+          this.$router.push("/sucesso");
         }
       } catch (error) {
         this.$swal({
@@ -191,5 +221,9 @@ a:active {
 .user-type-label {
   font-size: 14px;
   color: rgb(85, 85, 85);
+}
+
+.checkbox-margin {
+  margin-right: 10px;
 }
 </style>
