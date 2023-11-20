@@ -67,8 +67,13 @@
                   />
                   Quero cadastrar uma ONG
                 </label>
-                <button type="submit" class="mt-4 btn btn-primary button-color">
-                  Cadastrar
+                <button
+                  type="submit"
+                  class="mt-4 btn btn-primary button-color"
+                  :disabled="loading"
+                >
+                  <div v-if="loading" class="spinner"></div>
+                  <span v-else>Cadastrar</span>
                 </button>
                 <div class="text-start">
                   <a href="./assets/html/login-user.html" class="btn btn-link"
@@ -88,6 +93,7 @@
 import { Field, Form } from "vee-validate";
 import * as Yup from "yup";
 import { mapGetters } from "vuex";
+import userController from "../controllers/userController.js";
 
 export default {
   components: {
@@ -99,7 +105,9 @@ export default {
     const schema = Yup.object().shape({
       fullName: Yup.string().required("O campo nome é obrigatório."),
       password: Yup.string().required("O campo senha é obrigatório."),
-      confirmPassword: Yup.string().required("O campo senha é obrigatório."),
+      confirmPassword: Yup.string()
+        .required("O campo senha é obrigatório.")
+        .oneOf([Yup.ref("password"), null], "As senhas devem ser iguais."),
     });
 
     return {
@@ -108,6 +116,7 @@ export default {
       role: "",
       password: "",
       confirmPassword: "",
+      loading: false,
     };
   },
 
@@ -116,7 +125,27 @@ export default {
   },
 
   methods: {
-    submitForm() {},
+    async submitForm() {
+      this.loading = true;
+      try {
+        const isManager = this.role === "gestor" ? true : false;
+        const reqBody = {
+          name: this.fullName,
+          email: this.getEmail,
+          password: this.password,
+          isManager,
+        };
+
+        await userController.registerUser(reqBody);
+        if (!isManager) {
+          this.$router.push("/sucesso");
+        }
+      } catch (error) {
+        console.error("Erro no registro:", error.message);
+      } finally {
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
@@ -128,6 +157,9 @@ export default {
 }
 
 .button-color {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #8c52ff;
   border-color: #8c52ff;
 }

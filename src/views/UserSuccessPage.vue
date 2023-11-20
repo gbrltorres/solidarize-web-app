@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12 col-sm-6">
+          <div class="col-12">
             <button class="mt-4 btn btn-primary button-color custom-button">
               Voltar
             </button>

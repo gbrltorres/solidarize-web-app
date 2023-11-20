@@ -10,6 +10,7 @@
         <div class="row">
           <div class="col-12">
             <Form
+              ref="form"
               @submit="submitForm"
               :validation-schema="schema"
               v-slot="{ errors }"
@@ -52,6 +53,7 @@ import { Field, Form } from "vee-validate";
 import { mapActions } from "vuex";
 import * as Yup from "yup";
 import logo from "../assets/logo.png";
+import userController from "../controllers/userController.js";
 
 export default {
   components: {
@@ -76,9 +78,22 @@ export default {
   methods: {
     ...mapActions(["setEmail"]),
 
-    submitForm() {
-      this.setEmail(this.email);
-      this.$router.push("/cadastro");
+    async submitForm() {
+      try {
+        const userExists = await userController.checkUser({
+          email: this.email,
+        });
+        if (userExists) {
+          this.$refs.form.setErrors({
+            email: "Este e-mail já está cadastrado.",
+          });
+        } else {
+          this.setEmail(this.email);
+          this.$router.push("/cadastro");
+        }
+      } catch (ex) {
+        console.log("erro", ex);
+      }
     },
 
     linkClick() {
