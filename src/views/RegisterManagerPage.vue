@@ -144,7 +144,6 @@ export default {
 
   methods: {
     checkInterests() {
-      console.log("Verificando interesses");
       this.interestsError =
         this.interests.length > 0 ? null : "Selecione pelo menos um interesse.";
     },

@@ -129,7 +129,6 @@ export default {
       this.loading = true;
       try {
         const isManager = this.role === "gestor" ? true : false;
-        console.log("é gestor", isManager);
         const reqBody = {
           name: this.fullName,
           email: this.getEmail,
