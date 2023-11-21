@@ -46,6 +46,10 @@ nav a.router-link-exact-active {
   margin: auto;
 }
 
+.border-red {
+  border: 1px solid #dc3545;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

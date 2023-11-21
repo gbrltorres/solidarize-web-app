@@ -14,95 +14,71 @@
               :validation-schema="schema"
               v-slot="{ errors }"
             >
-              <div class="row mb-3">
-                <div class="col-12">
-                  <Field
-                    name="fullName"
-                    type="text"
-                    class="form-control"
-                    placeholder="Digite seu nome completo"
-                    :class="{ 'is-invalid': errors.fullName }"
-                    v-model="fullName"
-                  />
-                  <div class="invalid-feedback">{{ errors.fullName }}</div>
-                </div>
+              <div class="mb-3">
+                <Field
+                  name="fullName"
+                  type="text"
+                  class="form-control"
+                  placeholder="Digite seu nome completo"
+                  :class="{ 'is-invalid': errors.fullName }"
+                  v-model="fullName"
+                />
+                <div class="invalid-feedback">{{ errors.fullName }}</div>
               </div>
-              <div class="row mb-3">
-                <div class="col-12">
-                  <Field
-                    name="password"
-                    type="password"
-                    class="form-control"
-                    v-model="password"
-                    placeholder="Digite sua senha"
-                    :class="{ 'is-invalid': errors.password }"
-                  />
-                  <div class="invalid-feedback">{{ errors.password }}</div>
-                </div>
+              <div class="mb-3">
+                <Field
+                  name="password"
+                  type="password"
+                  class="form-control"
+                  v-model="password"
+                  placeholder="Digite sua senha"
+                  :class="{ 'is-invalid': errors.password }"
+                />
+                <div class="invalid-feedback">{{ errors.password }}</div>
               </div>
-              <div class="row mb-3">
-                <div class="col-12">
-                  <Field
-                    name="confirmPassword"
-                    type="password"
-                    class="form-control"
-                    v-model="confirmPassword"
-                    placeholder="Digite sua senha novamente"
-                    :class="{ 'is-invalid': errors.confirmPassword }"
-                  />
-                  <div class="invalid-feedback">
-                    {{ errors.confirmPassword }}
-                  </div>
-                </div>
+              <div class="mb-3">
+                <Field
+                  name="confirmPassword"
+                  type="password"
+                  class="form-control"
+                  v-model="confirmPassword"
+                  placeholder="Digite sua senha novamente"
+                  :class="{ 'is-invalid': errors.confirmPassword }"
+                />
+                <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
               </div>
-              <div class="row">
-                <div class="col-12 d-grid gap-2">
-                  <label class="text-start user-type-label">
-                    <input
-                      type="radio"
-                      name="role"
-                      value="nao-gestor"
-                      v-model="role"
-                      checked
-                    />
-                    Quero apenas fazer doações
-                  </label>
-                  <label
-                    class="text-start user-type-label"
-                    :class="{ 'mb-4': role === 'gestor' }"
+              <div class="d-grid gap-2">
+                <label class="text-start user-type-label">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="nao-gestor"
+                    v-model="role"
+                    checked
+                  />
+                  Quero apenas fazer doações
+                </label>
+                <label class="text-start user-type-label">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="gestor"
+                    v-model="role"
+                  />
+                  Quero cadastrar uma ONG
+                </label>
+                <button
+                  type="submit"
+                  class="col-6 mt-4 btn btn-primary button-color"
+                  :disabled="loading"
+                >
+                  <div v-if="loading" class="spinner"></div>
+                  <span v-else>Cadastrar</span>
+                </button>
+                <div class="text-start">
+                  <a href="./assets/html/login-user.html" class="btn btn-link"
+                    >Voltar para o início</a
                   >
-                    <input
-                      type="radio"
-                      name="role"
-                      value="gestor"
-                      v-model="role"
-                    />
-                    Quero cadastrar uma ONG
-                  </label>
-                  <div
-                    v-if="role === 'gestor'"
-                    class="register-manager-container"
-                  >
-                    <div class="separator-line mb-4"></div>
-                    <RegisterManagerPage />
-                  </div>
-                  <div v-else>
-                    <button
-                      type="submit"
-                      class="mt-4 btn btn-primary button-color"
-                      :disabled="loading"
-                    >
-                      <div v-if="loading" class="spinner"></div>
-                      <span v-else>Cadastrar</span>
-                    </button>
-                    <div class="text-start">
-                      <a
-                        href="./assets/html/login-user.html"
-                        class="btn btn-link"
-                        >Voltar para o início</a
-                      >
-                    </div>
-                  </div>
                 </div>
               </div>
             </Form>
@@ -116,15 +92,12 @@
 <script>
 import { Field, Form } from "vee-validate";
 import * as Yup from "yup";
-import { mapGetters } from "vuex";
-import userController from "../controllers/userController.js";
-import RegisterManagerPage from "./RegisterManagerPage.vue";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   components: {
     Field,
     Form,
-    RegisterManagerPage,
   },
 
   data() {
@@ -151,21 +124,23 @@ export default {
   },
 
   methods: {
+    ...mapActions(["setUser"]),
+
     async submitForm() {
       this.loading = true;
       try {
         const isManager = this.role === "gestor" ? true : false;
-        const reqBody = {
+        const userInfo = {
           name: this.fullName,
           email: this.getEmail,
           password: this.password,
           isManager,
         };
 
-        await userController.registerUser(reqBody);
         if (!isManager) {
           this.$router.push("/sucesso");
         } else {
+          this.setUser(userInfo);
           this.$router.push("/cadastro-gestor");
         }
       } catch (error) {
@@ -185,7 +160,7 @@ export default {
 
 <style scoped>
 .card {
-  max-width: 600px;
+  max-width: 400px;
   width: 100%;
   border: none;
 }
