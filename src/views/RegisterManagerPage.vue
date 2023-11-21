@@ -1,87 +1,102 @@
 <template>
-  <div class="container d-flex justify-content-center pt-5">
-    <div class="card p-4 mb-5">
-      <div class="card-body text-start">
-        <div class="row">
+  <div class="row text-start">
+    <div class="col-12">
+      <h5 class="card-title mb-4">
+        Quase lá! Agora você só precisa preencher os dados da ONG
+      </h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <Form
+        @submit="submitForm"
+        :validation-schema="schema"
+        v-slot="{ errors }"
+      >
+        <div class="row mb-3">
           <div class="col-12">
-            <h4 class="card-title mb-5">Cadastro de usuário gestor</h4>
+            <Field
+              name="ngoName"
+              type="text"
+              class="form-control"
+              placeholder="Digite o nome da ONG"
+              :class="{ 'is-invalid': errors.ngoName }"
+              v-model="ngoName"
+            />
+            <div class="invalid-feedback">{{ errors.ngoName }}</div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <Field
+              name="cnpj"
+              type="cnpj"
+              class="form-control"
+              v-model="cnpj"
+              placeholder="Digite o CNPJ"
+              :class="{ 'is-invalid': errors.cnpj }"
+            />
+            <div class="invalid-feedback">{{ errors.cnpj }}</div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <Field
+              name="phoneNumber"
+              type="text"
+              class="form-control"
+              v-model="phoneNumber"
+              placeholder="Digite o telefone da ONG"
+              :class="{ 'is-invalid': errors.phoneNumber }"
+            />
+            <div class="invalid-feedback">{{ errors.phoneNumber }}</div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-12">
+            <Field
+              as="textarea"
+              name="description"
+              class="form-control"
+              placeholder="Fale um pouco de sua ONG aqui"
+              v-model="description"
+              rows="4"
+            />
+            <ErrorMessage name="description" class="text-danger" />
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <Form
-              @submit="submitForm"
-              :validation-schema="schema"
-              v-slot="{ errors }"
-            >
-              <div class="mb-3">
-                <Field
-                  name="ngoName"
-                  type="text"
-                  class="form-control"
-                  placeholder="Digite o nome da ONG"
-                  :class="{ 'is-invalid': errors.ngoName }"
-                  v-model="ngoName"
-                />
-                <div class="invalid-feedback">{{ errors.ngoName }}</div>
-              </div>
-              <div class="mb-3">
-                <Field
-                  name="cnpj"
-                  type="cnpj"
-                  class="form-control"
-                  v-model="cnpj"
-                  placeholder="Digite o CNPJ"
-                  :class="{ 'is-invalid': errors.cnpj }"
-                />
-                <div class="invalid-feedback">{{ errors.cnpj }}</div>
-              </div>
-              <div class="mb-3">
-                <Field
-                  as="textarea"
-                  name="description"
-                  class="form-control"
-                  placeholder="Fale um pouco de sua ONG aqui"
-                  v-model="description"
-                  rows="4"
-                />
-                <ErrorMessage name="description" class="text-danger" />
-              </div>
-              <div class="d-grid gap-2">
-                <label>Interesses:</label>
-                <div
-                  v-for="option in interestsOptions"
-                  :key="option"
-                  class="mb-1"
-                >
-                  <Field
-                    class="checkbox-margin"
-                    type="checkbox"
-                    name="interests"
-                    :value="option"
-                    v-model="interests"
-                  />
-                  <label :for="`interest-${option}`">{{ option }}</label>
-                </div>
-                <ErrorMessage name="interests" class="text-danger" />
-                <button
-                  type="submit"
-                  class="mt-4 btn btn-primary button-color"
-                  :disabled="loading"
-                >
-                  <div v-if="loading" class="spinner"></div>
-                  <span v-else>Cadastrar</span>
-                </button>
-                <div class="text-start">
-                  <a href="./assets/html/login-user.html" class="btn btn-link"
-                    >Voltar para o início</a
-                  >
-                </div>
-              </div>
-            </Form>
+            <label class="mb-2">Interesses:</label>
+            <div v-for="option in interestsOptions" :key="option" class="mb-1">
+              <Field
+                class="checkbox-margin"
+                type="checkbox"
+                name="interests"
+                :value="option"
+                v-model="interests"
+              />
+              <label :for="`interest-${option}`">{{ option }}</label>
+            </div>
+            <ErrorMessage name="interests" class="text-danger" />
+            <div>
+              <button
+                type="submit"
+                class="mt-4 btn btn-primary button-color"
+                :disabled="loading"
+              >
+                <div v-if="loading" class="spinner"></div>
+                <span v-else>Cadastrar</span>
+              </button>
+            </div>
+            <div class="text-start">
+              <a href="./assets/html/login-user.html" class="btn btn-link"
+                >Voltar para o início</a
+              >
+            </div>
           </div>
         </div>
-      </div>
+      </Form>
     </div>
   </div>
 </template>
@@ -188,12 +203,6 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  max-width: 400px;
-  width: 100%;
-  border: none;
-}
-
 .button-color {
   display: flex;
   justify-content: center;
@@ -216,12 +225,6 @@ a:hover,
 a:active {
   color: #c3a0e3;
 }
-
-.user-type-label {
-  font-size: 14px;
-  color: rgb(85, 85, 85);
-}
-
 .checkbox-margin {
   margin-right: 10px;
 }
