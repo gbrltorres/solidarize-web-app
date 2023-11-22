@@ -9,22 +9,33 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <form>
+            <Form
+              @submit="submitForm"
+              :validation-schema="schema"
+              v-slot="{ errors }"
+            >
               <div class="mb-3">
-                <input
+                <Field
+                  name="email"
                   type="text"
                   class="form-control"
                   id="email"
                   placeholder="Digite seu e-mail"
                   v-model="email"
+                  :class="{ 'is-invalid': errors.email }"
                 />
+                <div class="invalid-feedback">{{ errors.email }}</div>
               </div>
               <div class="mb-4">
-                <PasswordInput
+                <Field
+                  name="password"
+                  type="password"
+                  class="form-control"
                   v-model="password"
                   placeholder="Digite sua senha"
-                  :showToggle="true"
+                  :class="{ 'is-invalid': errors.password }"
                 />
+                <div class="invalid-feedback">{{ errors.password }}</div>
               </div>
               <div class="card-footer text-start">
                 <div class="footer-content">
@@ -52,11 +63,11 @@
               <div class="separator-line mt-4"></div>
               <div class="mt-4">
                 Não possui uma conta?
-                <a href="./assets/html/login-user.html" class="btn btn-link"
+                <a href="#" @click="goToRegisterPage" class="btn btn-link"
                   >Cadastre aqui</a
                 >
               </div>
-            </form>
+            </Form>
           </div>
         </div>
       </div>
@@ -65,19 +76,77 @@
 </template>
 
 <script>
-import PasswordInput from "@/components/PasswordInput.vue";
+import { Field, Form } from "vee-validate";
+import * as Yup from "yup";
 import tips from "../assets/tips-icon.jpg";
+import userController from "@/controllers/userController";
 
 export default {
   components: {
-    PasswordInput,
+    Field,
+    Form,
   },
   data() {
+    const schema = Yup.object().shape({
+      email: Yup.string()
+        .required("O campo e-mail é obrigatório.")
+        .email("Por favor, insira um endereço de e-mail válido."),
+      password: Yup.string().required("O campo senha é obrigatório."),
+    });
+
     return {
+      schema,
       email: "",
       password: "",
       tipsUrl: tips,
+      loading: false,
     };
+  },
+
+  methods: {
+    async submitForm() {
+      this.loading = true;
+      try {
+        const userExists = await userController.checkUser({
+          email: this.email,
+        });
+        if (!userExists) {
+          this.$refs.form.setErrors({
+            email: "Este e-mail não foi cadastrado.",
+          });
+          return;
+        }
+
+        const response = await userController.userAuthentication({
+          email: this.email,
+          password: this.password,
+        });
+        if (response.isLogged) {
+          this.$router.push("/dashboard");
+          return;
+        }
+
+        this.$swal({
+          title: "Erro!",
+          text: response.message,
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      } catch (ex) {
+        this.$swal({
+          title: "Ocorreu algum erro!",
+          text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    goToRegisterPage() {
+      this.$router.push("/cadastro");
+    },
   },
 };
 </script>
@@ -112,6 +181,7 @@ export default {
   color: #6c757d;
   margin: 0;
 }
+
 .button-color {
   background-color: #8c52ff;
   border-color: #8c52ff;

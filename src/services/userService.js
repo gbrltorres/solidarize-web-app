@@ -17,4 +17,9 @@ export default {
     });
     return response;
   },
+
+  async authenticateUser(userData) {
+    const response = await axios.post(`${API_BASE_URL}/auth/login`, userData);
+    return response;
+  },
 };

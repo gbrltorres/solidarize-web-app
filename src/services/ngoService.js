@@ -21,4 +21,11 @@ export default {
     });
     return response;
   },
+
+  async updateNgo(ngoData, token) {
+    const response = await axios.put(`${API_BASE_URL}/ngo/register`, ngoData, {
+      Authorization: `Bearer ${token}`,
+    });
+    return response;
+  },
 };

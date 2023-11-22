@@ -15,6 +15,7 @@
     "bootstrap-icons": "^1.11.1",
     "core-js": "^3.8.3",
     "cpf-cnpj-validator": "^1.0.3",
+    "js-cookie": "^3.0.5",
     "vee-validate": "^4.5.8",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

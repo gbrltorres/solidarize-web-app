@@ -1,4 +1,5 @@
 import registerNgo from "../usecases/registerNgo.js";
+import updateNgo from "../usecases/updateNgo.js";
 import checkNgo from "../usecases/checkNgo.js";
 
 export default {
@@ -33,6 +34,15 @@ export default {
       if (error.response.status === 404) {
         return false;
       }
+      throw new Error(error.message || "Erro de serviço desconhecido");
+    }
+  },
+
+  async updateNgo(ngoData) {
+    try {
+      const result = await updateNgo.update(ngoData);
+      return result;
+    } catch (error) {
       throw new Error(error.message || "Erro de serviço desconhecido");
     }
   },
