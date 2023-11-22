@@ -10,6 +10,7 @@
         <div class="row">
           <div class="col-12">
             <Form
+              ref="form"
               @submit="submitForm"
               :validation-schema="schema"
               v-slot="{ errors }"
@@ -46,7 +47,7 @@
                   />
                   <p class="footer-text">
                     Este Login é destinado a gestores de ONG. Se você é um
-                    doador, faça o login no aplicativo móvel Solidarize
+                    doador, faça o login no aplicativo móvel Solidarize.
                   </p>
                 </div>
               </div>
@@ -107,12 +108,21 @@ export default {
     async submitForm() {
       this.loading = true;
       try {
-        const userExists = await userController.checkUser({
+        const checkUserResponse = await userController.checkUser({
           email: this.email,
         });
-        if (!userExists) {
+        if (!checkUserResponse) {
           this.$refs.form.setErrors({
             email: "Este e-mail não foi cadastrado.",
+          });
+          return;
+        }
+
+        if (!checkUserResponse.isManager) {
+          this.$swal({
+            text: "Se você é um doador, faça o login no aplicativo móvel Solidarize.",
+            icon: "error",
+            confirmButtonText: "Ok",
           });
           return;
         }
@@ -127,7 +137,6 @@ export default {
         }
 
         this.$swal({
-          title: "Erro!",
           text: response.message,
           icon: "error",
           confirmButtonText: "Ok",

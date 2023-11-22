@@ -16,10 +16,10 @@ export default {
     let response;
     try {
       response = await checkUser.check(userData);
-      return response.status === 200;
+      return response.data;
     } catch (error) {
       if (error.response.status === 404) {
-        return false;
+        return null;
       }
       throw new Error(error.message || "Erro de serviço desconhecido");
     }

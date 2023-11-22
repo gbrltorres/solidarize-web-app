@@ -87,10 +87,10 @@ export default {
     async submitForm() {
       this.loading = true;
       try {
-        const userExists = await userController.checkUser({
+        const user = await userController.checkUser({
           email: this.email,
         });
-        if (userExists) {
+        if (user) {
           this.$refs.form.setErrors({
             email: "Este e-mail já está cadastrado.",
           });

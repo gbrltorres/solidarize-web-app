@@ -94,6 +94,7 @@ import { Field, Form } from "vee-validate";
 import * as Yup from "yup";
 import { mapActions, mapGetters } from "vuex";
 import { redirectToHomePage } from "../middlewares/redirectToHomePage.js";
+import userController from "../controllers/userController.js";
 
 export default {
   components: {
@@ -139,6 +140,7 @@ export default {
         };
 
         if (!isManager) {
+          await userController.registerUser(userInfo);
           this.$router.push("/sucesso");
         } else {
           this.setUser(userInfo);
