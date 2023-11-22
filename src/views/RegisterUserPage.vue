@@ -75,8 +75,11 @@
                   <div v-if="loading" class="spinner"></div>
                   <span v-else>Cadastrar</span>
                 </button>
-                <div class="text-start">
-                  <a href="./assets/html/login-user.html" class="btn btn-link"
+                <div class="mt-2 text-start">
+                  <a
+                    href="#"
+                    @click.prevent="redirectToHomePage"
+                    class="btn btn-link"
                     >Voltar para o início</a
                   >
                 </div>
@@ -124,7 +127,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setUser"]),
+    ...mapActions(["setUser", "resetState"]),
 
     async submitForm() {
       this.loading = true;
@@ -154,13 +157,18 @@ export default {
         this.loading = false;
       }
     },
+
+    redirectToHomePage() {
+      this.$store.dispatch("resetState");
+      this.$router.push("/login");
+    },
   },
 };
 </script>
 
 <style scoped>
 .card {
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
   border: none;
 }

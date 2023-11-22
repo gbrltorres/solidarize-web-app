@@ -1,10 +1,13 @@
 import { createStore } from "vuex";
 
+const initialState = () => ({
+  email: "",
+  user: "",
+});
+
 export default createStore({
-  state: {
-    email: "",
-    user: "",
-  },
+  state: initialState(),
+
   getters: {
     getEmail(state) {
       return state.email;
@@ -22,6 +25,10 @@ export default createStore({
     setUser(state, user) {
       state.user = user;
     },
+
+    RESET_STATE(state) {
+      Object.assign(state, initialState());
+    },
   },
   actions: {
     setEmail({ commit }, email) {
@@ -30,6 +37,10 @@ export default createStore({
 
     setUser({ commit }, user) {
       commit("setUser", user);
+    },
+
+    resetState({ commit }) {
+      commit("RESET_STATE");
     },
   },
 });

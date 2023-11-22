@@ -3,7 +3,7 @@ import HomePage from "../views/HomePage.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/login",
     name: "Página Inicial",
     component: HomePage,
   },
@@ -35,6 +35,14 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "user-success-page" */ "../views/UserSuccessPage.vue"
+      ),
+  },
+  {
+    path: "/sucesso-ong",
+    name: "ONG Cadastrada",
+    component: () =>
+      import(
+        /* webpackChunkName: "ngo-success-page" */ "../views/NgoSuccessPage.vue"
       ),
   },
 ];

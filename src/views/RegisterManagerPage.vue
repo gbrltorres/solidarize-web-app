@@ -4,7 +4,7 @@
       <div class="card-body text-start">
         <div class="row">
           <div class="col-12">
-            <h5 class="card-title mb-4">
+            <h5 class="card-title mb-5">
               Quase lá! Agora você só precisa preencher os dados da ONG
             </h5>
           </div>
@@ -91,8 +91,11 @@
                     <span v-else>Cadastrar</span>
                   </button>
                 </div>
-                <div class="text-start">
-                  <a href="./assets/html/login-user.html" class="btn btn-link"
+                <div class="mt-2 text-start">
+                  <a
+                    href="#"
+                    @click.prevent="redirectToHomePage"
+                    class="btn btn-link"
                     >Voltar para o início</a
                   >
                 </div>
@@ -108,7 +111,7 @@
 <script>
 import { Field, Form, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { mask } from "vue-the-mask";
 import { cnpj as cnpjValidator } from "cpf-cnpj-validator";
 import ngoController from "@/controllers/ngoController";
@@ -192,6 +195,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(["resetState"]),
+
     checkInterests() {
       this.interestsError =
         this.interests.length > 0 ? null : "Selecione pelo menos um interesse.";
@@ -218,7 +223,7 @@ export default {
         await userController.registerUser(user);
         await ngoController.registerNgo(ngoInfo);
 
-        // implement redirection to success manager page
+        this.$router.push("/sucesso-ong");
       } catch (ex) {
         this.$swal({
           title: "Ocorreu algum erro!",
@@ -268,11 +273,22 @@ export default {
 
       return isValid;
     },
+
+    redirectToHomePage() {
+      this.$store.dispatch("resetState");
+      this.$router.push("/login");
+    },
   },
 };
 </script>
 
 <style scoped>
+.card {
+  max-width: 500px;
+  width: 100%;
+  border: none;
+}
+
 .button-color {
   display: flex;
   justify-content: center;
