@@ -19,12 +19,25 @@
                   v-model="email"
                 />
               </div>
-              <div class="mb-3">
+              <div class="mb-4">
                 <PasswordInput
                   v-model="password"
                   placeholder="Digite sua senha"
                   :showToggle="true"
                 />
+              </div>
+              <div class="card-footer text-start">
+                <div class="footer-content">
+                  <img
+                    :src="tipsUrl"
+                    alt="Imagem Dicas Rodapé"
+                    class="footer-image"
+                  />
+                  <p class="footer-text">
+                    Este Login é destinado a gestores de ONG. Se você é um
+                    doador, faça o login no aplicativo móvel Solidarize
+                  </p>
+                </div>
               </div>
               <div class="d-grid gap-2">
                 <button type="submit" class="mt-4 btn btn-primary button-color">
@@ -53,6 +66,7 @@
 
 <script>
 import PasswordInput from "@/components/PasswordInput.vue";
+import tips from "../assets/tips-icon.jpg";
 
 export default {
   components: {
@@ -62,6 +76,7 @@ export default {
     return {
       email: "",
       password: "",
+      tipsUrl: tips,
     };
   },
 };
@@ -74,6 +89,29 @@ export default {
   border: none;
 }
 
+.card-footer {
+  padding: 0;
+  border-top: none;
+  background-color: transparent;
+}
+
+.footer-content {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+}
+
+.footer-image {
+  width: 30px;
+  height: auto;
+}
+
+.footer-text {
+  flex-grow: 1;
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin: 0;
+}
 .button-color {
   background-color: #8c52ff;
   border-color: #8c52ff;
