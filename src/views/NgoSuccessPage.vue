@@ -10,8 +10,8 @@
         <div class="row">
           <div class="col-12">
             <p>
-              Você está pronto para solidarizar! Volte à tela de login e acesse
-              sua conta para fazer a gestão de sua ONG.
+              Você está pronto para solidarizar! Volte à tela inicial e faça o
+              login para gerenciar sua ONG.
             </p>
           </div>
         </div>
