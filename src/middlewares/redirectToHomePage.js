@@ -1,4 +1,4 @@
 export function redirectToHomePage(store, router) {
   store.dispatch("resetState");
-  router.push("/login");
+  router.push("/home");
 }
