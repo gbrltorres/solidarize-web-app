@@ -76,10 +76,7 @@
                   <span v-else>Cadastrar</span>
                 </button>
                 <div class="mt-2 text-start">
-                  <a
-                    href="#"
-                    @click.prevent="redirectToHomePage"
-                    class="btn btn-link"
+                  <a href="#" @click.prevent="redirectBack" class="btn btn-link"
                     >Voltar para o início</a
                   >
                 </div>
@@ -96,6 +93,7 @@
 import { Field, Form } from "vee-validate";
 import * as Yup from "yup";
 import { mapActions, mapGetters } from "vuex";
+import { redirectToHomePage } from "../middlewares/redirectToHomePage.js";
 
 export default {
   components: {
@@ -127,7 +125,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setUser", "resetState"]),
+    ...mapActions(["setUser"]),
 
     async submitForm() {
       this.loading = true;
@@ -158,9 +156,8 @@ export default {
       }
     },
 
-    redirectToHomePage() {
-      this.$store.dispatch("resetState");
-      this.$router.push("/login");
+    redirectBack() {
+      redirectToHomePage(this.$store, this.$router);
     },
   },
 };

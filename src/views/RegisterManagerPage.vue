@@ -92,10 +92,7 @@
                   </button>
                 </div>
                 <div class="mt-2 text-start">
-                  <a
-                    href="#"
-                    @click.prevent="redirectToHomePage"
-                    class="btn btn-link"
+                  <a href="#" @click.prevent="redirectBack" class="btn btn-link"
                     >Voltar para o início</a
                   >
                 </div>
@@ -111,11 +108,12 @@
 <script>
 import { Field, Form, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { mask } from "vue-the-mask";
 import { cnpj as cnpjValidator } from "cpf-cnpj-validator";
 import ngoController from "@/controllers/ngoController";
 import userController from "../controllers/userController.js";
+import { redirectToHomePage } from "../middlewares/redirectToHomePage.js";
 
 const phoneRegex = /^[1-9]{1}[1-9]{1}9[1-9][0-9]{7}$/;
 
@@ -195,8 +193,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(["resetState"]),
-
     checkInterests() {
       this.interestsError =
         this.interests.length > 0 ? null : "Selecione pelo menos um interesse.";
@@ -274,9 +270,8 @@ export default {
       return isValid;
     },
 
-    redirectToHomePage() {
-      this.$store.dispatch("resetState");
-      this.$router.push("/login");
+    redirectBack() {
+      redirectToHomePage(this.$store, this.$router);
     },
   },
 };

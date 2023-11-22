@@ -18,7 +18,7 @@
         <div class="row">
           <div class="col-12">
             <button
-              @click="redirectToHomePage"
+              @click="redirectBack"
               class="mt-4 btn btn-primary button-color custom-button"
             >
               Voltar
@@ -46,7 +46,7 @@
 
 <script>
 import logo from "../assets/logo.png";
-import { mapActions } from "vuex";
+import { redirectToHomePage } from "../middlewares/redirectToHomePage.js";
 
 export default {
   data() {
@@ -56,11 +56,8 @@ export default {
   },
 
   methods: {
-    ...mapActions(["resetState"]),
-
-    redirectToHomePage() {
-      this.$store.dispatch("resetState");
-      this.$router.push("/login");
+    redirectBack() {
+      redirectToHomePage(this.$store, this.$router);
     },
   },
 };
