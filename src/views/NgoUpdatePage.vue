@@ -180,7 +180,7 @@ export default {
     };
   },
 
-  async mounted() {
+  mounted() {
     this.fillRegisterFields();
   },
 
@@ -195,16 +195,12 @@ export default {
   },
 
   methods: {
-    async fillRegisterFields() {
-      try {
-        this.ngoName = this.ngoData.name;
-        this.cnpj = this.ngoData.code;
-        this.phoneNumber = this.ngoData.phoneNumber;
-        this.description = this.ngoData.description;
-        this.interests = this.ngoData.interests;
-      } catch (ex) {
-        console.log("ex", ex);
-      }
+    fillRegisterFields() {
+      this.ngoName = this.ngoData.name;
+      this.cnpj = this.ngoData.code;
+      this.phoneNumber = this.ngoData.phoneNumber;
+      this.description = this.ngoData.description;
+      this.interests = this.ngoData.interests;
     },
 
     checkInterests() {
@@ -215,7 +211,15 @@ export default {
     async submitForm() {
       this.loading = true;
       try {
-        await ngoController.updateNgo(this.ngoData);
+        const updateRequestBody = {
+          name: this.ngoName,
+          code: this.getRawCnpj,
+          phoneNumber: this.getRawPhone,
+          description: this.description,
+          interests: this.interests,
+        };
+
+        await ngoController.updateNgo(updateRequestBody);
         this.$emit("update-success");
       } catch (ex) {
         this.$swal({
