@@ -81,6 +81,7 @@ import { Field, Form } from "vee-validate";
 import * as Yup from "yup";
 import tips from "../assets/tips-icon.jpg";
 import userController from "@/controllers/userController";
+import { mapActions } from "vuex";
 
 export default {
   components: {
@@ -105,6 +106,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(["setUser"]),
+
     async submitForm() {
       this.loading = true;
       try {
@@ -118,7 +121,7 @@ export default {
           return;
         }
 
-        if (!checkUserResponse.isManager) {
+        if (!checkUserResponse.user.isManager) {
           this.$swal({
             text: "Se você é um doador, faça o login no aplicativo móvel Solidarize.",
             icon: "error",
@@ -132,6 +135,7 @@ export default {
           password: this.password,
         });
         if (response.isLogged) {
+          this.setUser(checkUserResponse.user);
           this.$router.push("/dashboard");
           return;
         }

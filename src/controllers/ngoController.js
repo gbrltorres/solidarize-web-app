@@ -25,6 +25,16 @@ export default {
     }
   },
 
+  async checkNgoById(ngoData) {
+    let response;
+    try {
+      response = await checkNgo.checkById(ngoData);
+      return response;
+    } catch (error) {
+      throw new Error(error.message || "Erro de serviço desconhecido");
+    }
+  },
+
   async checkNgoByPhoneNumber(ngoData) {
     let response;
     try {

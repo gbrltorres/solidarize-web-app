@@ -22,4 +22,8 @@ export default {
     const response = await axios.post(`${API_BASE_URL}/auth/login`, userData);
     return response;
   },
+
+  async deauthenticateUser() {
+    await axios.post(`${API_BASE_URL}/auth/logout`);
+  },
 };
