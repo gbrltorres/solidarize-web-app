@@ -30,9 +30,15 @@ export default {
   },
 
   async updateNgo(ngoData, token) {
-    const response = await axios.put(`${API_BASE_URL}/ngo/register`, ngoData, {
-      Authorization: `Bearer ${token}`,
-    });
+    const response = await axios.put(
+      `${API_BASE_URL}/protected/update`,
+      ngoData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response;
   },
 };

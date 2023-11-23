@@ -79,7 +79,7 @@
     </div>
   </div>
   <div v-if="activeComponent === 'update-info'">
-    <NgoUpdatePage :ngo-data="ngoData" />
+    <NgoUpdatePage :ngo-data="ngoData" @update-success="updateSuccess" />
   </div>
 </template>
 
@@ -107,21 +107,7 @@ export default {
   },
 
   async mounted() {
-    try {
-      const data = await userController.checkUser({
-        email: this.getUser.email,
-      });
-      this.user = data.user;
-
-      const response = await ngoController.checkNgoById({
-        id: this.user.ngo,
-      });
-      this.ngoData = response.data.ngo;
-    } catch (ex) {
-      // TODO: tela de erro genérico
-    } finally {
-      this.loading = false;
-    }
+    this.getNgoData();
   },
 
   computed: {
@@ -133,6 +119,30 @@ export default {
   },
 
   methods: {
+    async getNgoData() {
+      try {
+        const data = await userController.checkUser({
+          email: this.getUser.email,
+        });
+        this.user = data.user;
+
+        const response = await ngoController.checkNgoById({
+          id: this.user.ngo,
+        });
+        this.ngoData = response.data.ngo;
+      } catch (ex) {
+        // TODO: tela de erro genérico
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    updateSuccess() {
+      this.activeComponent = "ngo-info";
+      this.loading = true;
+      this.getNgoData();
+    },
+
     changeActiveComponent(component) {
       this.activeComponent = component;
       this.collapseNavbar();

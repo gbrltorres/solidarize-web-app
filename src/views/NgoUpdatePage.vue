@@ -213,20 +213,20 @@ export default {
     },
 
     async submitForm() {
-      //   this.loading = true;
-      //   try {
-      //     await ngoController.registerNgo(ngoInfo);
-      //     this.$router.push("/sucesso-ong");
-      //   } catch (ex) {
-      // this.$swal({
-      //   title: "Ocorreu algum erro!",
-      //   text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
-      //   icon: "error",
-      //   confirmButtonText: "Ok",
-      // });
-      //   } finally {
-      //     this.loading = false;
-      //   }
+      this.loading = true;
+      try {
+        await ngoController.updateNgo(this.ngoData);
+        this.$emit("update-success");
+      } catch (ex) {
+        this.$swal({
+          title: "Ocorreu algum erro!",
+          text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      } finally {
+        this.loading = false;
+      }
     },
 
     async isNgoDataValid() {
