@@ -270,8 +270,8 @@ export default {
       return isValid;
     },
 
-    redirectBack() {
-      redirectToHomePage(this.$store, this.$router);
+    async redirectBack() {
+      await redirectToHomePage(this.$store, this.$router);
     },
   },
 };

@@ -135,7 +135,7 @@ export default {
           password: this.password,
         });
         if (response.isLogged) {
-          this.setUser(checkUserResponse.user);
+          await this.setUser(checkUserResponse.user);
           this.$router.push("/dashboard");
           return;
         }

@@ -107,7 +107,7 @@ export default {
   },
 
   async mounted() {
-    this.getNgoData();
+    await this.getNgoData();
   },
 
   computed: {
@@ -131,16 +131,21 @@ export default {
         });
         this.ngoData = response.data.ngo;
       } catch (ex) {
-        // TODO: tela de erro genérico
+        this.$swal({
+          title: "Ocorreu algum erro!",
+          text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
       } finally {
         this.loading = false;
       }
     },
 
-    updateSuccess() {
+    async updateSuccess() {
       this.activeComponent = "ngo-info";
       this.loading = true;
-      this.getNgoData();
+      await this.getNgoData();
     },
 
     changeActiveComponent(component) {

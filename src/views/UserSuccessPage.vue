@@ -56,8 +56,8 @@ export default {
   },
 
   methods: {
-    redirectBack() {
-      redirectToHomePage(this.$store, this.$router);
+    async redirectBack() {
+      await redirectToHomePage(this.$store, this.$router);
     },
   },
 };

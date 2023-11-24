@@ -143,7 +143,7 @@ export default {
           await userController.registerUser(userInfo);
           this.$router.push("/sucesso");
         } else {
-          this.setUser(userInfo);
+          await this.setUser(userInfo);
           this.$router.push("/cadastro-gestor");
         }
       } catch (error) {
@@ -158,8 +158,8 @@ export default {
       }
     },
 
-    redirectBack() {
-      redirectToHomePage(this.$store, this.$router);
+    async redirectBack() {
+      await redirectToHomePage(this.$store, this.$router);
     },
   },
 };
