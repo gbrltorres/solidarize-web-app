@@ -95,7 +95,7 @@ export default {
             email: "Este e-mail já está cadastrado.",
           });
         } else {
-          this.setEmail(this.email);
+          await this.setEmail(this.email);
           this.$router.push("/cadastro");
         }
       } catch (ex) {

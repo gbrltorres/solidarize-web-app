@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/HomePage.vue";
+import NotFoundPage from "../views/NotFoundPage.vue";
+import Cookies from "js-cookie";
+import store from "../store";
 
 const routes = [
   {
@@ -10,6 +13,7 @@ const routes = [
   {
     path: "/cadastro",
     name: "Cadastro",
+    beforeEnter: [checkEmail],
     component: () =>
       import(
         /* webpackChunkName: "register-user" */ "../views/RegisterUserPage.vue"
@@ -18,6 +22,7 @@ const routes = [
   {
     path: "/cadastro-gestor",
     name: "Cadastro Gestor",
+    beforeEnter: [checkEmail],
     component: () =>
       import(
         /* webpackChunkName: "register-manager" */ "../views/RegisterManagerPage.vue"
@@ -48,16 +53,36 @@ const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
+    beforeEnter: [checkToken],
     component: () =>
       import(
         /* webpackChunkName: "dashboard-page" */ "../views/DashboardPage.vue"
       ),
   },
+  { path: "/:pathMatch(.*)*", component: NotFoundPage },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+function checkEmail(to, from, next) {
+  const userEmail = store.state.email;
+
+  if (!userEmail) {
+    next({ name: "Página Inicial" });
+  } else {
+    next();
+  }
+}
+
+function checkToken(to) {
+  const token = Cookies.get("token");
+
+  if (!token && to.name !== "Página Inicial") {
+    return "/";
+  }
+}
 
 export default router;
