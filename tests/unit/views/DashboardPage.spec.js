@@ -27,11 +27,14 @@ describe("DashboardPage.vue", () => {
         remove: jest.fn(),
       },
     });
+
     userController.checkUser.mockResolvedValue({ user: { ngo: "123" } });
     ngoController.checkNgoById.mockResolvedValue({
       data: { ngo: { interests: ["Education", "Environment"] } },
     });
+
     swalMock = jest.fn();
+
     wrapper = shallowMount(DashboardPage, {
       computed: {
         getInterestsString: () => "",
