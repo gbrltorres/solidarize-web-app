@@ -131,12 +131,7 @@ export default {
         });
         this.ngoData = response.data.ngo;
       } catch (ex) {
-        this.$swal({
-          title: "Ocorreu algum erro!",
-          text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
-          icon: "error",
-          confirmButtonText: "Ok",
-        });
+        this.showErrorAlert();
       } finally {
         this.loading = false;
       }
@@ -167,13 +162,17 @@ export default {
           this.$router.push("/");
         }
       } catch (ex) {
-        this.$swal({
-          title: "Ocorreu algum erro!",
-          text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
-          icon: "error",
-          confirmButtonText: "Ok",
-        });
+        this.showErrorAlert();
       }
+    },
+
+    showErrorAlert() {
+      this.$swal({
+        title: "Ocorreu algum erro!",
+        text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
     },
   },
 };
