@@ -11,7 +11,7 @@
           <div class="col-12">
             <p>
               Você está pronto para solidarizar! Volte à tela inicial e faça o
-              login para gerenciar sua ONG.
+              login novamente.
             </p>
           </div>
         </div>

@@ -15,7 +15,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item active">
+          <li v-if="isUserManager" class="nav-item active">
             <a
               class="nav-link"
               :class="{ 'active-link': activeComponent === 'ngo-info' }"
@@ -23,12 +23,20 @@
               >Dados da ONG
             </a>
           </li>
-          <li class="nav-item">
+          <li v-if="isUserManager" class="nav-item">
             <a
               class="nav-link"
               :class="{ 'active-link': activeComponent === 'update-info' }"
               @click="changeActiveComponent('update-info')"
               >Editar Dados
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              :class="{ 'active-link': activeComponent === 'search-ngo' }"
+              @click="changeActiveComponent('search-ngo')"
+              >Buscar ONG
             </a>
           </li>
           <li class="nav-item">
@@ -38,45 +46,8 @@
       </div>
     </div>
   </nav>
-  <div v-if="activeComponent === 'ngo-info'" class="container mt-4">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-6">
-        <div class="card">
-          <div class="card-body text-start p-5 pt-4">
-            <h5 class="card-title mb-4">Dados da ONG</h5>
-            <div
-              v-if="loading"
-              class="d-flex justify-content-center align-items-center"
-              style="height: 200px"
-            >
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Carregando...</span>
-              </div>
-            </div>
-            <div v-else>
-              <p class="card-text">
-                <strong>Nome:</strong> {{ ngoData ? ngoData.name : "" }}
-              </p>
-              <p class="card-text">
-                <strong>CNPJ:</strong> {{ ngoData ? ngoData.code : "" }}
-              </p>
-              <p class="card-text">
-                <strong>Telefone:</strong>
-                {{ ngoData ? ngoData.phoneNumber : "" }}
-              </p>
-              <p class="card-text">
-                <strong>Descrição:</strong>
-                {{ ngoData ? ngoData.description : "" }}
-              </p>
-              <p class="card-text">
-                <strong>Interesses:</strong>
-                {{ ngoData ? getInterestsString : "" }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div v-if="activeComponent === 'ngo-info'" class="mt-4">
+    <NgoInfoPage :ngo-data="ngoData"></NgoInfoPage>
   </div>
   <div v-if="activeComponent === 'update-info'">
     <NgoUpdatePage :ngo-data="ngoData" @update-success="updateSuccess" />
@@ -84,16 +55,18 @@
 </template>
 
 <script>
-import NgoUpdatePage from "./NgoUpdatePage.vue";
+import NgoUpdatePage from "../components/NgoUpdate.vue";
 import logo from "../assets/transparent-logo.png";
 import ngoController from "@/controllers/ngoController";
 import userController from "../controllers/userController.js";
 import authController from "../controllers/authController.js";
 import { mapGetters } from "vuex";
+import NgoInfoPage from "../components/NgoInfo.vue";
 
 export default {
   components: {
     NgoUpdatePage,
+    NgoInfoPage,
   },
 
   data() {
@@ -102,11 +75,12 @@ export default {
       activeComponent: "ngo-info",
       user: null,
       ngoData: null,
-      loading: true,
+      isUserManager: "",
     };
   },
 
   async mounted() {
+    this.isUserManager = this.getUser.isManager;
     await this.getNgoData();
   },
 
@@ -120,6 +94,7 @@ export default {
 
   methods: {
     async getNgoData() {
+      this.ngoData = null; // Responsável pelo loading do card de dados da ong
       try {
         const data = await userController.checkUser({
           email: this.getUser.email,
@@ -132,14 +107,11 @@ export default {
         this.ngoData = response.data.ngo;
       } catch (ex) {
         this.showErrorAlert();
-      } finally {
-        this.loading = false;
       }
     },
 
     async updateSuccess() {
       this.activeComponent = "ngo-info";
-      this.loading = true;
       await this.getNgoData();
     },
 

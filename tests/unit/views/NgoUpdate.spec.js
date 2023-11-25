@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import NgoUpdatePage from "@/views/NgoUpdatePage.vue";
+import NgoUpdatePage from "@/components/NgoUpdate.vue";
 import ngoController from "@/controllers/ngoController";
 
 jest.mock("@/controllers/ngoController");

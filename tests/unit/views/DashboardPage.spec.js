@@ -72,10 +72,6 @@ describe("Given DashboardPage starts", () => {
     it("Then loads NGO data", () => {
       expect(wrapper.vm.ngoData).not.toBeNull();
     });
-
-    it("Then sets loading to false", () => {
-      expect(wrapper.vm.loading).toBeFalsy();
-    });
   });
 
   describe("When changing active component", () => {
@@ -107,10 +103,6 @@ describe("Given DashboardPage starts", () => {
 
     it("Then sets active component to 'ngo-info'", () => {
       expect(wrapper.vm.activeComponent).toBe("ngo-info");
-    });
-
-    it("Then sets loading to true", () => {
-      expect(wrapper.vm.loading).toBeTruthy();
     });
 
     it("Then method getNgoData is ccalled", () => {
