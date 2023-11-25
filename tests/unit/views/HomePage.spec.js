@@ -12,19 +12,21 @@ const store = createStore({
   },
 });
 
-describe("HomePage.vue", () => {
+describe("Given HomePage starts", () => {
   let wrapper;
   let swalMock;
+  let routerPushMock;
 
   beforeEach(() => {
     swalMock = jest.fn();
+    routerPushMock = jest.fn();
 
     wrapper = shallowMount(HomePage, {
       global: {
         mocks: {
           $swal: swalMock,
           $router: {
-            push: jest.fn(),
+            push: routerPushMock,
           },
         },
         plugins: [store],
@@ -37,17 +39,25 @@ describe("HomePage.vue", () => {
     });
   });
 
-  it("Navigates to registration page on successful submission", async () => {
-    userController.checkUser.mockResolvedValue(null);
-    await wrapper.vm.submitForm();
+  describe("When form is submitted with a new user email", () => {
+    beforeEach(async () => {
+      userController.checkUser.mockResolvedValue(null);
+      await wrapper.vm.submitForm();
+    });
 
-    expect(wrapper.vm.$router.push).toHaveBeenCalledWith("/cadastro");
+    it("Then navigates to the registration page", () => {
+      expect(routerPushMock).toHaveBeenCalledWith("/cadastro");
+    });
   });
 
-  it("Shows error alert on submission failure", async () => {
-    userController.checkUser.mockRejectedValue(new Error("Test Error"));
-    await wrapper.vm.submitForm();
+  describe("When form submission fails", () => {
+    beforeEach(async () => {
+      userController.checkUser.mockRejectedValue(new Error("Test Error"));
+      await wrapper.vm.submitForm();
+    });
 
-    expect(swalMock).toHaveBeenCalled();
+    it("Then shows an error alert", () => {
+      expect(swalMock).toHaveBeenCalled();
+    });
   });
 });

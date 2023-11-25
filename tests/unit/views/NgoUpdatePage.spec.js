@@ -4,7 +4,7 @@ import ngoController from "@/controllers/ngoController";
 
 jest.mock("@/controllers/ngoController");
 
-describe("NgoUpdatePage.vue", () => {
+describe("Given NgoUpdatePage starts", () => {
   let wrapper;
 
   beforeEach(() => {
@@ -30,17 +30,20 @@ describe("NgoUpdatePage.vue", () => {
     });
   });
 
-  it("Submits the form successfully", async () => {
-    ngoController.updateNgo.mockResolvedValue({});
+  describe("When the form is submitted", () => {
+    beforeEach(async () => {
+      ngoController.updateNgo.mockResolvedValue({});
+      await wrapper.vm.submitForm();
+    });
 
-    await wrapper.vm.submitForm();
-
-    expect(ngoController.updateNgo).toHaveBeenCalledWith({
-      name: "ONG Teste",
-      code: "00000000000000",
-      phoneNumber: "00000000000",
-      description: "Descrição da ONG",
-      interests: ["Alimentos", "Roupas"],
+    it("Then calls updateNgo with the correct parameters", () => {
+      expect(ngoController.updateNgo).toHaveBeenCalledWith({
+        name: "ONG Teste",
+        code: "00000000000000",
+        phoneNumber: "00000000000",
+        description: "Descrição da ONG",
+        interests: ["Alimentos", "Roupas"],
+      });
     });
   });
 });

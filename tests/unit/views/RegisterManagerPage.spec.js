@@ -19,13 +19,12 @@ const mockStore = createStore({
   },
 });
 
-describe("RegisterManagerPage.vue", () => {
+describe("Given RegisterManagerPage starts", () => {
   let wrapper;
   let swalMock;
 
   beforeEach(() => {
     redirectToHomePage.mockRestore();
-
     redirectToHomePage.mockImplementation(() => Promise.resolve());
 
     swalMock = jest.fn();
@@ -52,21 +51,32 @@ describe("RegisterManagerPage.vue", () => {
     });
   });
 
-  it("Submits the form successfully", async () => {
-    wrapper.vm.isNgoDataValid = jest.fn().mockResolvedValue(true);
-    ngoController.registerNgo = jest.fn().mockResolvedValue({});
-    userController.registerUser = jest.fn().mockResolvedValue({});
+  describe("When the form is submitted", () => {
+    beforeEach(async () => {
+      wrapper.vm.isNgoDataValid = jest.fn().mockResolvedValue(true);
+      ngoController.registerNgo = jest.fn().mockResolvedValue({});
+      userController.registerUser = jest.fn().mockResolvedValue({});
 
-    await wrapper.vm.submitForm();
+      await wrapper.vm.submitForm();
+    });
 
-    expect(ngoController.registerNgo).toHaveBeenCalled();
-    expect(userController.registerUser).toHaveBeenCalled();
-    expect(wrapper.vm.$router.push).toHaveBeenCalledWith("/sucesso-ong");
+    it("Then calls registerNgo and registerUser", () => {
+      expect(ngoController.registerNgo).toHaveBeenCalled();
+      expect(userController.registerUser).toHaveBeenCalled();
+    });
+
+    it("Then navigates to the success page", () => {
+      expect(wrapper.vm.$router.push).toHaveBeenCalledWith("/sucesso-ong");
+    });
   });
 
-  it("Redirects back to home page on button click", async () => {
-    await wrapper.vm.redirectBack();
+  describe("When the back button is clicked", () => {
+    beforeEach(async () => {
+      await wrapper.vm.redirectBack();
+    });
 
-    expect(redirectToHomePage).toHaveBeenCalled();
+    it("Then redirects back to the home page", () => {
+      expect(redirectToHomePage).toHaveBeenCalled();
+    });
   });
 });

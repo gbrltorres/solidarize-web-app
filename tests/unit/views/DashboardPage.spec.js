@@ -16,9 +16,10 @@ const store = createStore({
   },
 });
 
-describe("DashboardPage.vue", () => {
+describe("Given DashboardPage starts", () => {
   let wrapper;
   let swalMock;
+  let routerPushMock;
 
   beforeEach(() => {
     document.getElementById = jest.fn().mockReturnValue({
@@ -34,6 +35,7 @@ describe("DashboardPage.vue", () => {
     });
 
     swalMock = jest.fn();
+    routerPushMock = jest.fn();
 
     wrapper = shallowMount(DashboardPage, {
       computed: {
@@ -44,7 +46,7 @@ describe("DashboardPage.vue", () => {
         mocks: {
           $swal: swalMock,
           $router: {
-            push: jest.fn(),
+            push: routerPushMock,
           },
         },
         plugins: [store],
@@ -52,35 +54,67 @@ describe("DashboardPage.vue", () => {
     });
   });
 
-  it("Shows error alert when call fails", () => {
-    wrapper.vm.showErrorAlert();
-    expect(swalMock).toHaveBeenCalled();
+  describe("When showErrorAlert is called", () => {
+    beforeEach(() => {
+      wrapper.vm.showErrorAlert();
+    });
+
+    it("Then triggers swalMock", () => {
+      expect(swalMock).toHaveBeenCalled();
+    });
   });
 
-  it("Loads NGO data on mount", async () => {
-    await wrapper.vm.$nextTick();
-    expect(wrapper.vm.ngoData).not.toBeNull();
-    expect(wrapper.vm.loading).toBeFalsy();
+  describe("When component is mounted", () => {
+    beforeEach(async () => {
+      await wrapper.vm.$nextTick();
+    });
+
+    it("Then loads NGO data", () => {
+      expect(wrapper.vm.ngoData).not.toBeNull();
+    });
+
+    it("Then sets loading to false", () => {
+      expect(wrapper.vm.loading).toBeFalsy();
+    });
   });
 
-  it("Changes active component correctly", () => {
-    wrapper.vm.changeActiveComponent("update-info");
-    expect(wrapper.vm.activeComponent).toBe("update-info");
+  describe("When changing active component", () => {
+    beforeEach(() => {
+      wrapper.vm.changeActiveComponent("update-info");
+    });
+
+    it("Then sets active component to 'update-info'", () => {
+      expect(wrapper.vm.activeComponent).toBe("update-info");
+    });
   });
 
-  it("Logs out successfully", async () => {
-    authController.deauthenticateUser.mockResolvedValue(true);
+  describe("When logging out", () => {
+    beforeEach(async () => {
+      authController.deauthenticateUser.mockResolvedValue(true);
+      await wrapper.vm.logout();
+    });
 
-    await wrapper.vm.logout();
-
-    expect(wrapper.vm.$router.push).toHaveBeenCalledWith("/");
+    it("Then redirects to the home page", () => {
+      expect(routerPushMock).toHaveBeenCalledWith("/");
+    });
   });
 
-  it("Updates NGO data successfully", async () => {
-    wrapper.vm.updateSuccess();
-    await wrapper.vm.logout();
+  describe("When updating NGO data", () => {
+    beforeEach(async () => {
+      wrapper.vm.getNgoData = jest.fn();
+      wrapper.vm.updateSuccess();
+    });
 
-    expect(wrapper.vm.activeComponent).toBe("ngo-info");
-    expect(wrapper.vm.loading).toBeTruthy();
+    it("Then sets active component to 'ngo-info'", () => {
+      expect(wrapper.vm.activeComponent).toBe("ngo-info");
+    });
+
+    it("Then sets loading to true", () => {
+      expect(wrapper.vm.loading).toBeTruthy();
+    });
+
+    it("Then method getNgoData is ccalled", () => {
+      expect(wrapper.vm.getNgoData).toHaveBeenCalled();
+    });
   });
 });

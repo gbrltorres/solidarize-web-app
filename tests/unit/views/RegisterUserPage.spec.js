@@ -4,7 +4,6 @@ import userController from "@/controllers/userController.js";
 import { createStore } from "vuex";
 
 jest.mock("@/controllers/userController.js");
-jest.mock("@/middlewares/redirectToHomePage.js");
 
 const mockRouterPush = jest.fn();
 const mockSwal = jest.fn();
@@ -27,7 +26,7 @@ const mocks = {
   $swal: mockSwal,
 };
 
-describe("RegisterUserPage.vue", () => {
+describe("Given RegisterUserPage starts", () => {
   let wrapper;
 
   beforeEach(() => {
@@ -39,37 +38,43 @@ describe("RegisterUserPage.vue", () => {
     });
   });
 
-  it("Submits form for a non-manager user", async () => {
-    wrapper.setData({
-      role: "nao-gestor",
-      fullName: "User Test",
-      password: "123456",
-      confirmPassword: "123456",
+  describe("When the form is submitted for a non-manager user", () => {
+    beforeEach(async () => {
+      wrapper.setData({
+        role: "nao-gestor",
+        fullName: "User Test",
+        password: "123456",
+        confirmPassword: "123456",
+      });
+      userController.registerUser = jest.fn().mockResolvedValue({});
+      await wrapper.vm.submitForm();
     });
-    userController.registerUser = jest.fn().mockResolvedValue({});
 
-    await wrapper.vm.submitForm();
-
-    expect(userController.registerUser).toHaveBeenCalled();
-    expect(mockRouterPush).toHaveBeenCalledWith("/sucesso");
+    it("Then calls registerUser and navigates to success page", () => {
+      expect(userController.registerUser).toHaveBeenCalled();
+      expect(mockRouterPush).toHaveBeenCalledWith("/sucesso");
+    });
   });
 
-  it("Submits form for a manager user", async () => {
-    wrapper.setData({
-      role: "gestor",
-      fullName: "Manager Test",
-      password: "123456",
-      confirmPassword: "123456",
+  describe("When the form is submitted for a manager user", () => {
+    beforeEach(async () => {
+      wrapper.setData({
+        role: "gestor",
+        fullName: "Manager Test",
+        password: "123456",
+        confirmPassword: "123456",
+      });
+      await wrapper.vm.submitForm();
     });
 
-    await wrapper.vm.submitForm();
-
-    expect(mockDispatch).toHaveBeenCalledWith(expect.anything(), {
-      email: "test@example.com",
-      isManager: true,
-      name: "Manager Test",
-      password: "123456",
+    it("Then dispatches setUser and navigates to manager registration page", () => {
+      expect(mockDispatch).toHaveBeenCalledWith(expect.anything(), {
+        email: "test@example.com",
+        isManager: true,
+        name: "Manager Test",
+        password: "123456",
+      });
+      expect(mockRouterPush).toHaveBeenCalledWith("/cadastro-gestor");
     });
-    expect(mockRouterPush).toHaveBeenCalledWith("/cadastro-gestor");
   });
 });

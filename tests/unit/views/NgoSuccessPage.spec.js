@@ -10,7 +10,7 @@ const mockRouter = {
   push: jest.fn(),
 };
 
-describe("NgoSuccessPage.vue", () => {
+describe("Given NgoSuccessPage starts", () => {
   let wrapper;
 
   beforeEach(() => {
@@ -24,9 +24,13 @@ describe("NgoSuccessPage.vue", () => {
     });
   });
 
-  it("Redirects back to home page on button click", async () => {
-    await wrapper.vm.redirectBack();
+  describe("When the back button is clicked", () => {
+    beforeEach(async () => {
+      await wrapper.vm.redirectBack();
+    });
 
-    expect(redirectToHomePage).toHaveBeenCalledWith(mockStore, mockRouter);
+    it("Then redirects back to the home page", () => {
+      expect(redirectToHomePage).toHaveBeenCalledWith(mockStore, mockRouter);
+    });
   });
 });
