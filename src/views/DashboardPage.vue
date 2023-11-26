@@ -46,13 +46,13 @@
       </div>
     </div>
   </nav>
-  <div v-if="activeComponent === 'ngo-info'" class="mt-4">
+  <div v-if="activeComponent === 'ngo-info'" class="pt-md-5">
     <NgoInfoPage :ngo-data="ngoData"></NgoInfoPage>
   </div>
-  <div v-if="activeComponent === 'update-info'">
+  <div v-if="activeComponent === 'update-info'" class="pt-md-5">
     <NgoUpdatePage :ngo-data="ngoData" @update-success="updateSuccess" />
   </div>
-  <div v-if="activeComponent === 'search-ngo'">
+  <div v-if="activeComponent === 'search-ngo'" class="pt-md-5">
     <SearchNgo></SearchNgo>
   </div>
 </template>

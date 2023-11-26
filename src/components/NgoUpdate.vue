@@ -1,10 +1,10 @@
 <template>
-  <div class="container d-flex justify-content-center pt-5">
-    <div class="card p-4 mb-5">
+  <div class="container d-flex justify-content-center">
+    <div class="card p-4">
       <div class="card-body text-start">
         <div class="row">
           <div class="col-12">
-            <h5 class="card-title mb-5">Edite os dados da ONG</h5>
+            <h5 class="card-title mb-4">Edite os dados da ONG</h5>
           </div>
         </div>
         <div class="row">
@@ -63,7 +63,7 @@
                 <ErrorMessage name="description" class="text-danger" />
               </div>
               <div class="mb-3">
-                <label class="mb-2">Interesses:</label>
+                <label class="mb-2 custom-label">Interesses:</label>
                 <div
                   v-for="option in interestsOptions"
                   :key="option"

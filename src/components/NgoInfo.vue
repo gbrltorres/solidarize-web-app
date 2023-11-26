@@ -3,7 +3,7 @@
     <div class="row justify-content-center">
       <div class="col-12 col-lg-6">
         <div class="card">
-          <div class="card-body text-start p-5 pt-4">
+          <div class="card-body text-start p-5">
             <h5 class="card-title mb-4">Dados da ONG</h5>
             <div
               v-if="!ngoData"
@@ -67,4 +67,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.card {
+  border: none;
+}
+</style>

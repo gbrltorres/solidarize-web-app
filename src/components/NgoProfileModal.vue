@@ -70,7 +70,9 @@ export default {
     },
 
     contactNgo() {
-      this.$emit("contact", this.details);
+      console.log("teste", this.details);
+      const whatsappUrl = `https://wa.me/${this.details.phoneNumber}`;
+      window.open(whatsappUrl, "_blank");
     },
   },
 };

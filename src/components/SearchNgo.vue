@@ -1,6 +1,6 @@
 <template>
-  <div class="container d-flex justify-content-center pt-5">
-    <div class="card p-4 mb-5">
+  <div class="d-flex justify-content-center">
+    <div class="card p-4">
       <div class="card-body text-start">
         <h5 class="card-title mb-3 label">O que você vai doar hoje?</h5>
         <Form ref="form" @submit="submitForm">
@@ -112,7 +112,6 @@
     :details="selectedNgo"
     :showModal="showModal"
     @close="closeModal"
-    @contact="handleContact"
   />
 </template>
 
@@ -203,11 +202,6 @@ export default {
       } finally {
         this.loading = false;
       }
-    },
-
-    handleContact(ngo) {
-      // Lógica para entrar em contato com a ONG
-      console.log("Entrar em contato com a ONG:", ngo.name);
     },
 
     mapRowsId() {
