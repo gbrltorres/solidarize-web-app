@@ -79,6 +79,17 @@
                   <label :for="`interest-${option}`">{{ option }}</label>
                 </div>
                 <ErrorMessage name="interests" class="text-danger" />
+                <div class="mt-4 mb-5">
+                  <label for="imageInput" class="form-label custom-label"
+                    >Imagem de perfil da ONG:</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="imageInput"
+                    @change="convertToBase64"
+                  />
+                </div>
                 <div>
                   <button
                     type="submit"
@@ -177,6 +188,7 @@ export default {
         "Outros",
       ],
       interestsError: null,
+      imageBase64: "",
     };
   },
 
@@ -217,6 +229,7 @@ export default {
           phoneNumber: this.getRawPhone,
           description: this.description,
           interests: this.interests,
+          image: this.imageBase64,
         };
 
         await ngoController.updateNgo(updateRequestBody);
@@ -269,6 +282,26 @@ export default {
       }
 
       return isValid;
+    },
+
+    convertToBase64(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (!file.type.match("image.*")) {
+          this.$swal({
+            text: "Por favor, selecione um arquivo do tipo imagem.",
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.imageBase64 = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
     },
   },
 };
