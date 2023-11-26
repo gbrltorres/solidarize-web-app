@@ -121,15 +121,6 @@ export default {
           return;
         }
 
-        if (!checkUserResponse.user.isManager) {
-          this.$swal({
-            text: "Se você é um doador, faça o login no aplicativo móvel Solidarize.",
-            icon: "error",
-            confirmButtonText: "Ok",
-          });
-          return;
-        }
-
         const response = await userController.userAuthentication({
           email: this.email,
           password: this.password,

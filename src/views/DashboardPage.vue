@@ -52,6 +52,9 @@
   <div v-if="activeComponent === 'update-info'">
     <NgoUpdatePage :ngo-data="ngoData" @update-success="updateSuccess" />
   </div>
+  <div v-if="activeComponent === 'search-ngo'">
+    <SearchNgo></SearchNgo>
+  </div>
 </template>
 
 <script>
@@ -62,17 +65,19 @@ import userController from "../controllers/userController.js";
 import authController from "../controllers/authController.js";
 import { mapGetters } from "vuex";
 import NgoInfoPage from "../components/NgoInfo.vue";
+import SearchNgo from "@/components/SearchNgo.vue";
 
 export default {
   components: {
     NgoUpdatePage,
     NgoInfoPage,
+    SearchNgo,
   },
 
   data() {
     return {
       logoUrl: logo,
-      activeComponent: "ngo-info",
+      activeComponent: "",
       user: null,
       ngoData: null,
       isUserManager: "",
@@ -81,6 +86,12 @@ export default {
 
   async mounted() {
     this.isUserManager = this.getUser.isManager;
+    console.log("user situation", this.isUserManager);
+    if (this.isUserManager) {
+      this.activeComponent = "ngo-info";
+    } else {
+      this.activeComponent = "search-ngo";
+    }
     await this.getNgoData();
   },
 

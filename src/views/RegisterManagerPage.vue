@@ -219,7 +219,7 @@ export default {
         await userController.registerUser(user);
         await ngoController.registerNgo(ngoInfo);
 
-        this.$router.push("/sucesso-ong");
+        this.$router.push("/sucesso");
       } catch (ex) {
         this.$swal({
           title: "Ocorreu algum erro!",

@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import NgoSuccessPage from "@/views/NgoSuccessPage.vue";
+import RegisterSuccessPage from "@/views/RegisterSuccessPage.vue";
 import { redirectToHomePage } from "@/middlewares/redirectToHomePage.js";
 import { createStore } from "vuex";
 
@@ -10,11 +10,11 @@ const mockRouter = {
   push: jest.fn(),
 };
 
-describe("Given NgoSuccessPage starts", () => {
+describe("Given RegisterSuccessPage starts", () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = shallowMount(NgoSuccessPage, {
+    wrapper = shallowMount(RegisterSuccessPage, {
       global: {
         mocks: {
           $store: mockStore,

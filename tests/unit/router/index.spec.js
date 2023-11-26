@@ -33,12 +33,6 @@ describe("Given the Vue router", () => {
     expect(matchedRoute.name).toBe("Usuário Cadastrado");
   });
 
-  it("Then has a route for /sucesso-ong", () => {
-    const route = "/sucesso-ong";
-    const matchedRoute = router.resolve(route);
-    expect(matchedRoute.name).toBe("ONG Cadastrada");
-  });
-
   it("Then has a route for /dashboard", () => {
     const route = "/dashboard";
     const matchedRoute = router.resolve(route);

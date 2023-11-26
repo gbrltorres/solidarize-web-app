@@ -66,7 +66,7 @@ describe("Given RegisterManagerPage starts", () => {
     });
 
     it("Then navigates to the success page", () => {
-      expect(wrapper.vm.$router.push).toHaveBeenCalledWith("/sucesso-ong");
+      expect(wrapper.vm.$router.push).toHaveBeenCalledWith("/sucesso");
     });
   });
 

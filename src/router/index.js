@@ -39,15 +39,7 @@ const routes = [
     name: "Usuário Cadastrado",
     component: () =>
       import(
-        /* webpackChunkName: "user-success-page" */ "../views/UserSuccessPage.vue"
-      ),
-  },
-  {
-    path: "/sucesso-ong",
-    name: "ONG Cadastrada",
-    component: () =>
-      import(
-        /* webpackChunkName: "ngo-success-page" */ "../views/NgoSuccessPage.vue"
+        /* webpackChunkName: "register-success-page" */ "../views/RegisterSuccessPage.vue"
       ),
   },
   {
