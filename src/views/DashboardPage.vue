@@ -87,11 +87,11 @@ export default {
   async mounted() {
     this.isUserManager = this.getUser.isManager;
     if (this.isUserManager) {
+      await this.getNgoData();
       this.activeComponent = "ngo-info";
     } else {
       this.activeComponent = "search-ngo";
     }
-    await this.getNgoData();
   },
 
   computed: {

@@ -44,11 +44,17 @@
                 <td class="table-line">
                   <div class="d-flex align-items-center">
                     <div
-                      v-if="row.imageUrl"
+                      v-if="row.image"
                       class="profile-img"
-                      :style="{ backgroundImage: 'url(' + row.imageUrl + ')' }"
+                      :style="{ backgroundImage: 'url(' + row.image + ')' }"
                     ></div>
-                    <div v-else class="profile-placeholder"></div>
+                    <div
+                      v-else
+                      class="profile-img"
+                      :style="{
+                        backgroundImage: 'url(' + defaultImage + ')',
+                      }"
+                    ></div>
                     <div>
                       {{ row.name }}
                       <div class="text-muted small">
@@ -114,6 +120,7 @@
 import { Field, Form } from "vee-validate";
 import NgoProfileModal from "../components/NgoProfileModal.vue";
 import ngoController from "../controllers/ngoController.js";
+import defaultImageUrl from "../assets/no-photo.jpg";
 
 export default {
   components: {
@@ -146,6 +153,7 @@ export default {
       dataLoaded: false,
       showModal: false,
       selectedNgo: null,
+      defaultImage: defaultImageUrl,
     };
   },
 
@@ -284,14 +292,6 @@ export default {
 
 .label {
   font-weight: bold;
-}
-
-.profile-placeholder {
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  background-color: #adb5bd;
-  margin-right: 8px;
 }
 
 .profile-img {

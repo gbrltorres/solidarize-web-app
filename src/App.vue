@@ -50,6 +50,13 @@ nav a.router-link-exact-active {
   border: 1px solid #dc3545;
 }
 
+.custom-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

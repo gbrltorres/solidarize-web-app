@@ -8,11 +8,17 @@
       <div class="modal-body text-start">
         <div class="mb-4 d-flex align-items-center">
           <div
-            v-if="details.imageUrl"
+            v-if="details.image"
             class="profile-img"
-            :style="{ backgroundImage: 'url(' + details.imageUrl + ')' }"
+            :style="{ backgroundImage: 'url(' + details.image + ')' }"
           ></div>
-          <div v-else class="profile-placeholder"></div>
+          <div
+            v-else
+            class="profile-img"
+            :style="{
+              backgroundImage: 'url(' + defaultImage + ')',
+            }"
+          ></div>
           <h4 class="ong-name">{{ details.name }}</h4>
         </div>
         <h5>Quem somos:</h5>
@@ -38,6 +44,8 @@
 </template>
 
 <script>
+import defaultImageUrl from "../assets/no-photo.jpg";
+
 export default {
   props: {
     details: {
@@ -49,6 +57,13 @@ export default {
       required: true,
     },
   },
+
+  data() {
+    return {
+      defaultImage: defaultImageUrl,
+    };
+  },
+
   methods: {
     closeModal() {
       this.$emit("close");
@@ -62,14 +77,6 @@ export default {
 </script>
 
 <style scoped>
-.profile-placeholder {
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  background-color: #adb5bd;
-  margin-right: 8px;
-}
-
 .profile-img {
   height: 40px;
   width: 40px;

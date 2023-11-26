@@ -65,7 +65,7 @@
                 <ErrorMessage name="description" class="text-danger" />
               </div>
               <div class="mb-3">
-                <label class="mb-2">Interesses:</label>
+                <label class="mb-2 custom-label">Interesses:</label>
                 <div
                   v-for="option in interestsOptions"
                   :key="option"
@@ -81,6 +81,17 @@
                   <label :for="`interest-${option}`">{{ option }}</label>
                 </div>
                 <ErrorMessage name="interests" class="text-danger" />
+                <div class="mt-4 mb-5">
+                  <label for="imageInput" class="form-label custom-label"
+                    >Imagem de perfil da ONG:</label
+                  >
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="imageInput"
+                    @change="convertToBase64"
+                  />
+                </div>
                 <div>
                   <button
                     type="submit"
@@ -177,6 +188,7 @@ export default {
         "Outros",
       ],
       interestsError: null,
+      imageBase64: "",
     };
   },
 
@@ -206,6 +218,8 @@ export default {
           return;
         }
 
+        console.log("imagem", this.imageBase64);
+
         const ngoInfo = {
           name: this.ngoName,
           code: this.getRawCnpj,
@@ -213,6 +227,7 @@ export default {
           description: this.description,
           interests: this.interests,
           email: this.getUser.email,
+          image: this.imageBase64,
         };
 
         const user = { ...this.getUser };
@@ -223,10 +238,11 @@ export default {
       } catch (ex) {
         this.$swal({
           title: "Ocorreu algum erro!",
-          text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
+          text: "Ocorreu um erro de serviço desconhecido. Você será redirecionado para a página inicial.",
           icon: "error",
           confirmButtonText: "Ok",
         });
+        this.redirectBack();
       } finally {
         this.loading = false;
       }
@@ -272,6 +288,26 @@ export default {
 
     async redirectBack() {
       await redirectToHomePage(this.$store, this.$router);
+    },
+
+    convertToBase64(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (!file.type.match("image.*")) {
+          this.$swal({
+            text: "Por favor, selecione um arquivo do tipo imagem.",
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.imageBase64 = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
     },
   },
 };
