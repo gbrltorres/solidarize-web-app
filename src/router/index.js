@@ -71,7 +71,6 @@ function checkEmail(to, from, next) {
 
 function checkToken(to) {
   const token = Cookies.get("token");
-  console.log("token", token);
 
   if (!token && to.name !== "Página Inicial") {
     return "/";

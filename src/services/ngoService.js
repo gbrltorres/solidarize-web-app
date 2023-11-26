@@ -8,6 +8,19 @@ export default {
     return response;
   },
 
+  async listByCategory(requestData, token) {
+    const response = await axios.get(
+      `${API_BASE_URL}/protected/list-category`,
+      {
+        params: requestData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response;
+  },
+
   async checkNgoByCnpj(ngoData) {
     const response = await axios.get(`${API_BASE_URL}/ngo/check-ngo-cnpj`, {
       params: ngoData,

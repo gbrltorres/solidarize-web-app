@@ -1,12 +1,23 @@
 import registerNgo from "../usecases/registerNgo.js";
 import updateNgo from "../usecases/updateNgo.js";
 import checkNgo from "../usecases/checkNgo.js";
+import listByCategory from "../usecases/listByCategory.js";
 
 export default {
   async registerNgo(ngoData) {
     try {
       const result = await registerNgo.register(ngoData);
       return result;
+    } catch (error) {
+      throw new Error(error.message || "Erro de serviço desconhecido");
+    }
+  },
+
+  async listByCategory(requestData) {
+    let response;
+    try {
+      response = await listByCategory.list(requestData);
+      return response.data.ngos;
     } catch (error) {
       throw new Error(error.message || "Erro de serviço desconhecido");
     }

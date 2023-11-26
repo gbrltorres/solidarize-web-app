@@ -23,70 +23,117 @@
             <button type="submit" class="btn btn-primary">Buscar</button>
           </div>
         </Form>
-        <p class="mt-5 mb-2 label">Resultados:</p>
-        <table class="table">
-          <tbody>
-            <tr
-              v-for="row in paginatedData"
-              :key="row.id"
-              @click="rowClicked(row.id)"
-            >
-              <td class="table-line">
-                <div class="d-flex align-items-center">
-                  <div
-                    v-if="row.imageUrl"
-                    class="profile-img"
-                    :style="{ backgroundImage: 'url(' + row.imageUrl + ')' }"
-                  ></div>
-                  <div v-else class="profile-placeholder"></div>
-                  <div>
-                    {{ row.content }}
-                    <div class="text-muted small">
-                      Clique aqui para conhecer
+        <div
+          v-if="loading"
+          class="d-flex justify-content-center align-items-center"
+          style="height: 200px"
+        >
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+        <div v-if="dataLoaded">
+          <p class="mt-5 mb-2 label">Resultados:</p>
+          <table class="table">
+            <tbody>
+              <tr
+                v-for="row in paginatedData"
+                :key="row.id"
+                @click="rowClicked(row.id)"
+              >
+                <td class="table-line">
+                  <div class="d-flex align-items-center">
+                    <div
+                      v-if="row.imageUrl"
+                      class="profile-img"
+                      :style="{ backgroundImage: 'url(' + row.imageUrl + ')' }"
+                    ></div>
+                    <div v-else class="profile-placeholder"></div>
+                    <div>
+                      {{ row.name }}
+                      <div class="text-muted small">
+                        Clique aqui para conhecer
+                      </div>
                     </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <nav aria-label="Page navigation">
-          <ul class="pagination justify-content-center">
-            <li class="page-item" :class="{ disabled: currentPage === 1 }">
-              <a
-                class="page-link"
-                href="#"
-                aria-label="Previous"
-                @click.prevent="changePage(currentPage - 1)"
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Previous"
+                  @click.prevent="changePage(currentPage - 1)"
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li
+                class="page-item"
+                v-for="n in totalPages"
+                :key="n"
+                :class="{ active: n === currentPage }"
               >
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li
-              class="page-item"
-              v-for="n in totalPages"
-              :key="n"
-              :class="{ active: n === currentPage }"
-            >
-              <a class="page-link" href="#" @click.prevent="changePage(n)">{{
-                n
-              }}</a>
-            </li>
-            <li
-              class="page-item"
-              :class="{ disabled: currentPage === totalPages }"
-            >
-              <a
-                class="page-link"
-                href="#"
-                aria-label="Next"
-                @click.prevent="changePage(currentPage + 1)"
+                <a class="page-link" href="#" @click.prevent="changePage(n)">{{
+                  n
+                }}</a>
+              </li>
+              <li
+                class="page-item"
+                :class="{ disabled: currentPage === totalPages }"
               >
-                <span aria-hidden="true">&raquo;</span>
-              </a>
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Next"
+                  @click.prevent="changePage(currentPage + 1)"
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+    <div class="p-5 custom-modal" @click.stop>
+      <div class="modal-header">
+        <h3 class="modal-title">Perfil</h3>
+        <button class="close" @click="closeModal">&times;</button>
+      </div>
+      <div class="modal-body text-start">
+        <div class="mb-4 d-flex align-items-center">
+          <div
+            v-if="false"
+            class="profile-img"
+            :style="{ backgroundImage: 'url(' + row.imageUrl + ')' }"
+          ></div>
+          <div v-else class="profile-placeholder"></div>
+          <h4 class="ong-name">{{ selectedNgo.name }}</h4>
+        </div>
+        <h5>Quem somos:</h5>
+        <p class="mb-3 ong-description">{{ selectedNgo.description }}</p>
+        <div class="ong-interests">
+          <h5>Doações que temos interesse:</h5>
+          <ul class="interests-list">
+            <li
+              class="mb-2"
+              v-for="interest in selectedNgo.interests"
+              :key="interest"
+            >
+              {{ interest }}
             </li>
           </ul>
-        </nav>
+        </div>
+        <button class="btn contact-btn" @click="contactNgo(selectedNgo)">
+          Entrar em contato
+        </button>
       </div>
     </div>
   </div>
@@ -94,7 +141,7 @@
 
 <script>
 import { Field, Form } from "vee-validate";
-import logo from "../assets/secondary-logo.png";
+import ngoController from "../controllers/ngoController.js";
 
 export default {
   components: {
@@ -108,28 +155,32 @@ export default {
       categories: [
         "Alimentos",
         "Roupas",
-        "Brinquedos",
+        "Materiais de Higiene",
+        "Materiais Hospitalares",
+        "Eletrônicos",
+        "Eletrodomésticos",
+        "Materiais Escolares",
         "Livros",
-        "Equipamentos",
+        "Móveis",
+        "Materiais Esportivos",
         "Outros",
       ],
-      rows: [
-        { id: 1, content: "Sebastião Salgados", imageUrl: logo },
-        { id: 2, content: "Pika Sonica", imageUrl: "" },
-        { id: 3, content: "Anjos angelicais", imageUrl: "" },
-        { id: 4, content: "Vasco da Gama", imageUrl: "" },
-        { id: 5, content: "3 Espiãs demais", imageUrl: "" },
-        { id: 6, content: "Macacos escravos", imageUrl: "" },
-      ],
+      rows: [],
       currentPage: 1,
       itemsPerPage: 5,
+      totalItems: 0,
+      loading: false,
+      dataLoaded: false,
+      showModal: false,
+      selectedNgo: null,
     };
   },
 
   computed: {
     totalPages() {
-      return Math.ceil(this.rows.length / this.itemsPerPage);
+      return Math.ceil(this.totalItems / this.itemsPerPage);
     },
+
     paginatedData() {
       let start = (this.currentPage - 1) * this.itemsPerPage;
       let end = start + this.itemsPerPage;
@@ -138,17 +189,86 @@ export default {
   },
 
   methods: {
-    submitForm() {
-      // Lógica para enviar a categoria selecionada
+    async submitForm() {
+      this.dataLoaded = false;
+      this.loading = true;
+      try {
+        if (!this.selectedCategory) {
+          this.showNotSelectedAlert();
+          return;
+        }
+
+        const requestData = {
+          interest: this.selectedCategory,
+          page: this.currentPage,
+          pageSize: this.itemsPerPage,
+        };
+
+        const response = await ngoController.listByCategory(requestData);
+
+        this.totalItems = response.total;
+        if (response.total === 0) {
+          this.rows = [];
+          this.dataLoaded = false;
+          this.showEmptyArrayAlert();
+          return;
+        }
+
+        this.rows = response.data;
+        this.mapRowsId();
+        this.dataLoaded = true;
+      } catch (ex) {
+        this.showErrorAlert();
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    mapRowsId() {
+      this.rows = this.rows.map((row, index) => ({
+        id: index,
+        ...row,
+      }));
     },
 
     rowClicked(id) {
-      console.log(`Linha ${id} clicada.`);
+      this.selectedNgo = this.rows.find((row) => row.id === id);
+      this.showModal = true;
     },
 
-    changePage(page) {
+    closeModal() {
+      this.showModal = false;
+    },
+
+    async changePage(page) {
       if (page < 1 || page > this.totalPages) return;
       this.currentPage = page;
+      await this.submitForm(); // Recarrega os dados com a nova página
+    },
+
+    showErrorAlert() {
+      this.$swal({
+        title: "Ocorreu algum erro!",
+        text: "Ocorreu um erro de serviço desconhecido. Tente novamente.",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    },
+
+    showEmptyArrayAlert() {
+      this.$swal({
+        text: "Infelizmente não encontramos nenhuma ONG com este interesse",
+        icon: "info",
+        confirmButtonText: "Ok",
+      });
+    },
+
+    showNotSelectedAlert() {
+      this.$swal({
+        text: "Você precisa selecionar uma das categorias!",
+        icon: "info",
+        confirmButtonText: "Ok",
+      });
     },
   },
 };
@@ -203,5 +323,108 @@ export default {
   background-size: cover;
   background-position: center;
   margin-right: 8px;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.custom-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  z-index: 1051;
+  display: block !important;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.close {
+  font-size: 1.5rem;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.ong-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0;
+}
+
+h5 {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.ong-description {
+  margin-bottom: 1rem;
+}
+
+.ong-interests {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.interests-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.interests-list li {
+  display: inline-block;
+  background-color: #e9ecef;
+  padding: 0.25rem 0.75rem;
+  margin-right: 0.5rem;
+  border-radius: 16px;
+  font-size: 0.875rem;
+}
+
+.contact-btn {
+  display: block;
+  width: 100%;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn {
+  background-color: #8c52ff;
+  border-color: #8c52ff;
+}
+
+.btn:hover {
+  background-color: #c3a0e3;
+  border-color: #c3a0e3;
 }
 </style>

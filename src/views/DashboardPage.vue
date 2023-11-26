@@ -86,7 +86,6 @@ export default {
 
   async mounted() {
     this.isUserManager = this.getUser.isManager;
-    console.log("user situation", this.isUserManager);
     if (this.isUserManager) {
       this.activeComponent = "ngo-info";
     } else {
